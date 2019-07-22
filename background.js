@@ -9,15 +9,7 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 	}, function(tabs) {
 		var activeTab = tabs[0];
 		chrome.tabs.sendMessage(activeTab.id, {
-			"message" : "clicked_browser_action"
+			"message" : "clicked_recheck-web"
 		});
 	});
-});
-
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-	if (request.message === "open_new_tab") {
-		chrome.tabs.create({
-			"url" : request.url
-		});
-	}
 });
