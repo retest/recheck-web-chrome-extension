@@ -1,4 +1,4 @@
-cssAttributes = arguments[0];
+cssAttributes = {};
 
 function Counter() {
 	this.map = {};
@@ -152,10 +152,3 @@ var html = transform(htmlNode);
 var allElements = mapElement(htmlNode, "//html[1]", {
 	"//html[1]": html
 });
-
-var request = new XMLHttpRequest();
-request.open("POST", "http://localhost:8080/api/v0.1.0/paths-webdata-mapping", true);
-request.setRequestHeader('Content-Type', 'application/json');
-request.send(JSON.stringify(allElements));
-
-return allElements;
