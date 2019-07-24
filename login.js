@@ -4,28 +4,32 @@ var keycloak = Keycloak({
     clientId: 'marvin'
 });
 
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+	if (request.message === "clicked_recheck-web") {
+		console.log('Got message about click.' );
+	}
+});
+
+
 var reloadData = function () {
     keycloak.updateToken(10)
             .success(function() {
-                alert("User " + keycloak.idTokenParsed.email + " is logged in.");
+            	window.close();
             })
             .error(function() {
                 alert('Failed to updateToken.');
             });
 }
 
-keycloak.init({ onLoad: 'login-required' })
-	.success(function(authenticated) {
-		alert(authenticated ? 'authenticated' : 'not authenticated');
-	})
-	.error(function() {
-		alert('failed to initialize');
-	});
-
-keycloak.updateToken(10)
-	.success(function() {
-        alert("User " + keycloak.idTokenParsed.email + " is logged in.");
-    })
-	.error(function(errorData) {
-		alert("Error updating token for user " + keycloak.idTokenParsed + ": " + errorData);
-	});
+document.addEventListener('DOMContentLoaded', function () {
+	keycloak.init({ onLoad: 'login-required' })
+		.success(function(authenticated) {
+			if (authenticated) {
+		        chrome.runtime.sendMessage({'message': 'recheck-web_login' });
+			}
+			window.close();
+		})
+		.error(function() {
+			alert('Failed to initialize keycloak!');
+		});
+});

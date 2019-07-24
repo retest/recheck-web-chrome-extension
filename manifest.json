@@ -20,6 +20,7 @@
 	},
 	"background": {
 		"scripts": [
+			"keycloak.min.js",
 			"background.js"
 		],
 		"persistent": true
@@ -27,6 +28,6 @@
 	"web_accessible_resources": [
 	  "login.html",
 	  "login.js",
-		"keycloak.js"
+		"keycloak.min.js"
 	]
 }
