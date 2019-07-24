@@ -25,6 +25,8 @@
 		"persistent": true
 	},
 	"web_accessible_resources": [
-        "keycloak.js"
-    ]
+	  "login.html",
+	  "login.js",
+		"keycloak.js"
+	]
 }

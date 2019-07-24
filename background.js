@@ -11,9 +11,7 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 		currentWindow : true
 	}, function(tabs) {
 		var activeTab = tabs[0];
-		chrome.browserAction.setPopup({
-		    popup: "login.html"
-		});
+		chrome.windows.create({'url': 'login.html'}, function(window) {});
 		chrome.tabs.sendMessage(activeTab.id, {
 			"message" : "clicked_recheck-web"
 		});
