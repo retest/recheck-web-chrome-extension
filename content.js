@@ -17,7 +17,13 @@ chrome.runtime.onMessage.addListener(
     	}
     	xhr.send(JSON.stringify({
     		'allElements': allElements,
-    		'name': name
+    		'name': name,
+			'authenticated' : request.authenticated,
+			'token' : request.token,
+			'refreshToken' : request.refreshToken,
+			'subject' : request.subject,
+			'realmAccess' : request.realmAccess,
+			'resourceAccess' : request.resourceAccess
     	}));
     }
   }
