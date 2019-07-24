@@ -6,19 +6,19 @@ chrome.runtime.onMessage.addListener(
     	if (name == null || name == '') {
     		return;
     	} 
-    	var request = new XMLHttpRequest();
-    	request.open('POST', 'http://localhost:8080/api/v0.1.0/paths-webdata-mapping', true);
-    	request.setRequestHeader('Content-Type', 'application/json');
-    	request.setRequestHeader('Authorization', 'Bearer ' + request.token);
-    	request.onreadystatechange = function() {
-    	    if (request.readyState === 4) {
-    	      alert(request.response);
+    	var xhr = new XMLHttpRequest();
+    	xhr.open('POST', 'http://localhost:8080/api/v1.3.0/paths-webdata-mapping', true);
+    	xhr.setRequestHeader('Content-Type', 'application/json');
+    	xhr.setRequestHeader('Authorization', 'Bearer ' + request.token);
+    	xhr.onreadystatechange = function() {
+    	    if (xhr.readyState === 4) {
+    	      alert(xhr.response);
     	    }
     	}
-    	request.send(JSON.stringify({
+    	xhr.send(JSON.stringify({
     		'allElements': allElements,
     		'name': name
-    		}));
+    	}));
     }
   }
 );

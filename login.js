@@ -1,5 +1,6 @@
 var keycloak = Keycloak({
-    url: 'https://sso.prod.cloud.retest.org/auth',
+// TODO url: 'https://sso.prod.cloud.retest.org/auth',
+	url: 'https://sso.dev.cloud.retest.org/auth',
     realm: 'customer',
     clientId: 'marvin'
 });
