@@ -12,7 +12,11 @@ chrome.runtime.onMessage.addListener(
     	xhr.setRequestHeader('Authorization', 'Bearer ' + request.token);
     	xhr.onreadystatechange = function() {
     	    if (xhr.readyState === 4) {
-    	      alert(xhr.response);
+    	    	if (xhr.status == 200) {
+    	    		alert(xhr.response);
+    	    	} else {
+    	    		alert('Request returned status : ' + xhr.response);
+    	    	}
     	    }
     	}
     	xhr.send(JSON.stringify({
