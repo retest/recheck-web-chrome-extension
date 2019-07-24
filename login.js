@@ -4,32 +4,21 @@ var keycloak = Keycloak({
     clientId: 'marvin'
 });
 
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-	if (request.message === "clicked_recheck-web") {
-		console.log('Got message about click.' );
-	}
-});
-
-
-var reloadData = function () {
-    keycloak.updateToken(10)
-            .success(function() {
-            	window.close();
-            })
-            .error(function() {
-                alert('Failed to updateToken.');
-            });
-}
-
-document.addEventListener('DOMContentLoaded', function () {
-	keycloak.init({ onLoad: 'login-required' })
-		.success(function(authenticated) {
-			if (authenticated) {
-		        chrome.runtime.sendMessage({'message': 'recheck-web_login' });
-			}
+window.addEventListener("load", function(event) {
+    keycloak.init({ onLoad: 'login-required' })
+        .success(function(){
+	        chrome.runtime.sendMessage({
+	        	'message': 'recheck-web_login',
+	        	'authenticated': keycloak.authenticated,
+	        	'token': keycloak.token,
+	        	'refreshToken': keycloak.refreshToken,
+	        	'subject': keycloak.subject,
+	        	'realmAccess': keycloak.realmAccess,
+	        	'resourceAccess': keycloak.resourceAccess
+	        });
 			window.close();
-		})
-		.error(function() {
-			alert('Failed to initialize keycloak!');
-		});
+        })
+        .error(function(errorData) {
+            document.getElementById('messages').innerHTML = '<b>Failed to load data. Error: ' + JSON.stringify(errorData) + '</b>';
+        });
 });
