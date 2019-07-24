@@ -16,6 +16,19 @@ function getScreensize() {
     }
 }
 
+function getScreenshot() {
+	domtoimage.toPng(document.body).then(function(dataUrl) {
+		sendResponse({
+			'allElements' : JSON.stringify(allElements),
+			'title' : document.title,
+			'screenshot' : dataUrl
+		});
+    }
+	).catch(function(error) {
+		console.error('oops, something went wrong: ' + error);
+	});
+}
+
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 	if (request.message === 'recheck-web_clicked') {
 		var htmlNode = document.getElementsByTagName("html")[0];
@@ -25,6 +38,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 		});
 		sendResponse({
 			'allElements' : JSON.stringify(allElements),
+			'screenshot' : getScreenshot(),
 			'title' : document.title,
 			'url' : window.location.href,
 			'os' : getOs(),

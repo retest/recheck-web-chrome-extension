@@ -11,6 +11,7 @@
 				"file:///*"
 			],
 			"js": [
+				"dom-to-image.min.2.6.0.js",
 				"getAllElementsByPath.js",
 				"content.js"
 			]
