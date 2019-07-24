@@ -1,15 +1,58 @@
 // background.js
 
+var activeTabId;
+
 // Called when the user clicks on the browser action.
 chrome.browserAction.onClicked.addListener(function(tab) {
-	// Send a message to the active tab
+	// persist tabId of activeTab
 	chrome.tabs.query({
 		active : true,
 		currentWindow : true
 	}, function(tabs) {
 		var activeTab = tabs[0];
-		chrome.tabs.sendMessage(activeTab.id, {
-			"message" : "clicked_recheck-web"
-		});
+		activeTabId = activeTab.id;
 	});
+	chrome.windows.create({
+		'url' : 'login.html',
+		'left' : 100,
+		'top' : 0,
+		'width' : 1000,
+		'height' : 870
+	});
+});
+
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+	if (request.message === 'recheck-web_login') {
+		chrome.tabs.sendMessage(activeTabId, {
+			'message' : 'recheck-web_clicked'
+		}, function(response) {
+			var name = prompt('Please enter the name of the check: ', response.title);
+			if (name == null || name == '') {
+				return;
+			}
+			var xhr = new XMLHttpRequest();
+			xhr.open('POST', 'http://localhost:8080/api/v1.3.0/paths-webdata-mapping', true);
+			xhr.setRequestHeader('Content-Type', 'application/json');
+			xhr.setRequestHeader('Authorization', 'Bearer ' + request.token);
+			xhr.onreadystatechange = function() {
+				if (xhr.readyState === 4) {
+					if (xhr.status == 200) {
+						alert(xhr.response);
+					} else {
+						alert('Request returned status : ' + xhr.response);
+					}
+				}
+			}
+			xhr.send(JSON.stringify({
+				'allElements' : JSON.parse(response.allElements),
+				'name' : name,
+				'authenticated' : request.authenticated,
+				'token' : request.token,
+				'refreshToken' : request.refreshToken,
+				'subject' : request.subject,
+				'realmAccess' : request.realmAccess,
+				'resourceAccess' : request.resourceAccess
+			}));
+		});
+	}
 });

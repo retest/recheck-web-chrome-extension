@@ -21,6 +21,12 @@
 	"background": {
 		"scripts": [
 			"background.js"
-		]
-	}
+		],
+		"persistent": true
+	},
+	"web_accessible_resources": [
+		"login.html",
+		"login.js",
+		"keycloak.min.js"
+	]
 }
