@@ -1,5 +1,6 @@
 // background.js
 
+const MAPPING_SERVICE_URL = 'http://localhost:8080/api/v1.3.0/paths-webdata-mapping';
 var activeTabId;
 
 // Called when the user clicks on the browser action.
@@ -31,7 +32,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 				return;
 			}
 			var xhr = new XMLHttpRequest();
-			xhr.open('POST', 'http://localhost:8080/api/v1.3.0/paths-webdata-mapping', true);
+			xhr.open('POST', MAPPING_SERVICE_URL, true);
 			xhr.setRequestHeader('Content-Type', 'application/json');
 			xhr.setRequestHeader('Authorization', 'Bearer ' + request.token);
 			xhr.onreadystatechange = function() {
