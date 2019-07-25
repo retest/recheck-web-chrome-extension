@@ -37,7 +37,13 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 			xhr.onreadystatechange = function() {
 				if (xhr.readyState === 4) {
 					if (xhr.status == 200) {
-						alert(xhr.response);
+						if (xhr.response === 'recheck-web-Golden-Master-created') {
+							alert('Created Golden Master ' + name);
+						} else {
+							chrome.tabs.create({
+								'url' : 'http://garkbit.dev.cloud.retest.org/dashboard'
+							});
+						}
 					} else {
 						alert('Request returned status : ' + xhr.response);
 					}
