@@ -52,12 +52,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 			xhr.send(JSON.stringify({
 				'allElements' : JSON.parse(response.allElements),
 				'name' : name,
-				'authenticated' : request.authenticated,
-				'token' : request.token,
-				'refreshToken' : request.refreshToken,
-				'subject' : request.subject,
-				'realmAccess' : request.realmAccess,
-				'resourceAccess' : request.resourceAccess
+				'token' : request.token
 			}));
 		});
 	}

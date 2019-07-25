@@ -10,12 +10,7 @@ window.addEventListener("load", function(event) {
         .success(function(){
 	        chrome.runtime.sendMessage({
 	        	'message': 'recheck-web_login',
-	        	'authenticated': keycloak.authenticated,
-	        	'token': keycloak.token,
-	        	'refreshToken': keycloak.refreshToken,
-	        	'subject': keycloak.subject,
-	        	'realmAccess': keycloak.realmAccess,
-	        	'resourceAccess': keycloak.resourceAccess
+	        	'token': keycloak.token
 	        });
 			window.close();
         })
