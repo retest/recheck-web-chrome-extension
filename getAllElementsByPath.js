@@ -195,9 +195,3 @@ function mapElement(element, parentPath, allElements) {
 	}
 	return allElements;
 }
-
-var htmlNode = document.getElementsByTagName("html")[0];
-var html = transform(htmlNode);
-var allElements = mapElement(htmlNode, "//html[1]", {
-	"//html[1]": html
-});
