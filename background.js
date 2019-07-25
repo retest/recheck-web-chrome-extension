@@ -1,6 +1,7 @@
 // background.js
 
 const MAPPING_SERVICE_URL = 'http://localhost:8080/api/v1.3.0/paths-webdata-mapping';
+const REPORT_DASHBOARD_URL = 'http://garkbit.dev.cloud.retest.org/dashboard';
 var activeTabId;
 
 // Called when the user clicks on the browser action.
@@ -42,7 +43,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 							alert('Created Golden Master ' + name);
 						} else {
 							chrome.tabs.create({
-								'url' : 'http://garkbit.dev.cloud.retest.org/dashboard'
+								'url' : REPORT_DASHBOARD_URL
 							});
 						}
 					} else {
