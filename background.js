@@ -2,6 +2,8 @@
 
 const MAPPING_SERVICE_URL = 'http://localhost:8080/api/v1.3.0/paths-webdata-mapping';
 const REPORT_DASHBOARD_URL = 'http://garkbit.dev.cloud.retest.org/dashboard';
+const RESPONSE_GOLDEN_MASTER_CREATED = 'recheck-web-Golden-Master-created';
+
 var activeTabId;
 
 // Called when the user clicks on the browser action.
@@ -39,7 +41,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 			xhr.onreadystatechange = function() {
 				if (xhr.readyState === 4) {
 					if (xhr.status == 200) {
-						if (xhr.response === 'recheck-web-Golden-Master-created') {
+						if (xhr.response === RESPONSE_GOLDEN_MASTER_CREATED) {
 							alert('Created Golden Master ' + name);
 						} else {
 							chrome.tabs.create({
