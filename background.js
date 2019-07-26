@@ -51,8 +51,10 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 						} else {
 							alert('Error interacting with retest: ' + xhr.response);
 						}
+					} else if (xhr.status == 403) {
+						alert('Something is wrong with your access rights.\nPlease contact support: support@retest.de');
 					} else {
-						alert('Request returned status : ' + xhr.status);
+						alert('Server responded with status: ' + xhr.status);
 					}
 				}
 			}
