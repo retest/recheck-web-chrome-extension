@@ -12,6 +12,6 @@ Using filters, you can easily differentiate between style, positioning or conten
 
 Find the [recheck-web](https://chrome.google.com/webstore/detail/recheck-web/ifbcdobnjihilgldbjeomakdaejhplii) extension in the Chrome Webstore and click install.
 
-##Extra notes:
+## Extra notes:
 
 Please report any bugs that you find as issues on the project.
