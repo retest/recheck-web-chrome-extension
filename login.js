@@ -1,6 +1,3 @@
-// Adapt that if developing the extension and loading unpacked...
-const recheckWebExtensionId = 'ifbcdobnjihilgldbjeomakdaejhplii';
-
 var keycloak = Keycloak({
 // TODO url: 'https://sso.prod.cloud.retest.org/auth',
 	url: 'https://sso.dev.cloud.retest.org/auth',
@@ -8,10 +5,10 @@ var keycloak = Keycloak({
     clientId: 'babelfish'
 });
 
-window.addEventListener('load', function(event) {
+window.addEventListener("load", function(event) {
     keycloak.init({ onLoad: 'login-required' })
         .success(function(){
-        	chrome.runtime.sendMessage(recheckWebExtensionId, {
+	        chrome.runtime.sendMessage({
 	        	'message': 'recheck-web_login',
 	        	'token': keycloak.token
 	        });
