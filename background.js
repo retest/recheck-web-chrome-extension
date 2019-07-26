@@ -1,6 +1,6 @@
 // background.js
 
-const MAPPING_SERVICE_URL = 'http://localhost:8080/api/v1.3.0/paths-webdata-mapping';
+const MAPPING_SERVICE_URL = 'http://babelfish.dev.cloud.retest.org/api/v1.3.0/paths-webdata-mapping';
 const REPORT_DASHBOARD_URL = 'http://garkbit.dev.cloud.retest.org/dashboard';
 const RESPONSE_GOLDEN_MASTER_CREATED = 'recheck-web-Golden-Master-created';
 const RESPONSE_REPORT_CREATED = 'recheck-web-Report-created';
