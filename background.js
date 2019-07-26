@@ -56,6 +56,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 			xhr.send(JSON.stringify({
 				'allElements' : JSON.parse(response.allElements),
 				'name' : name,
+				'title' : response.title,
 				'token' : request.token
 			}));
 		});
