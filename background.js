@@ -59,7 +59,11 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 			xhr.send(JSON.stringify({
 				'allElements' : JSON.parse(response.allElements),
 				'name' : name,
-				'title' : response.title
+				'title' : response.title,
+				'url' : response.url,
+				'os' : response.os,
+				'browser' : response.browser,
+				'screensize' : response.screensize
 			}));
 		});
 	}

@@ -1,4 +1,21 @@
 // content.js
+
+function getOs() {
+	return navigator.oscpu;
+}
+
+function getBrowser() {
+	return navigator.vendor + ' ' + navigator.vendorSub;
+}
+
+function getScreensize() {
+    if (screen.width) {
+        width = (screen.width) ? screen.width : '';
+        height = (screen.height) ? screen.height : '';
+        return '' + width + 'x' + height;
+    }
+}
+
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 	if (request.message === 'recheck-web_clicked') {
 		var htmlNode = document.getElementsByTagName("html")[0];
@@ -8,7 +25,11 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 		});
 		sendResponse({
 			'allElements' : JSON.stringify(allElements),
-			'title' : document.title
+			'title' : document.title,
+			'url' : window.location.href,
+			'os' : getOs(),
+			'browser' : getBrowser(),
+			'screensize' : getScreensize()
 		});
 	}
 });
