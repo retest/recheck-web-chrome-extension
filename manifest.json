@@ -2,7 +2,7 @@
 	"manifest_version": 2,
 	"name": "recheck-web",
 	"description": "Click to recheck this website",
-	"version": "0.1",
+	"version": "0.2",
 	"content_scripts": [
 		{
 			"matches": [
