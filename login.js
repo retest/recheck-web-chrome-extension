@@ -15,7 +15,7 @@ window.addEventListener('load', function(event) {
 	        	'message': 'recheck-web_login',
 	        	'token': keycloak.token
 	        });
-			window.close();
+			//window.close();
         })
         .error(function(errorData) {
             document.getElementById('messages').innerHTML = '<b>Failed to load data. Error: ' + JSON.stringify(errorData) + '</b>';
