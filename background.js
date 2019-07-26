@@ -3,6 +3,7 @@
 const MAPPING_SERVICE_URL = 'http://localhost:8080/api/v1.3.0/paths-webdata-mapping';
 const REPORT_DASHBOARD_URL = 'http://garkbit.dev.cloud.retest.org/dashboard';
 const RESPONSE_GOLDEN_MASTER_CREATED = 'recheck-web-Golden-Master-created';
+const RESPONSE_REPORT_CREATED = 'recheck-web-Report-created';
 
 var activeTabId;
 
@@ -43,13 +44,15 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 					if (xhr.status == 200) {
 						if (xhr.response === RESPONSE_GOLDEN_MASTER_CREATED) {
 							alert('Created Golden Master ' + name);
-						} else {
+						} else if (xhr.response === RESPONSE_REPORT_CREATED) {
 							chrome.tabs.create({
 								'url' : REPORT_DASHBOARD_URL
 							});
+						} else {
+							alert('Error interacting with retest: ' + xhr.response);
 						}
 					} else {
-						alert('Request returned status : ' + xhr.response);
+						alert('Request returned status : ' + xhr.status);
 					}
 				}
 			}
