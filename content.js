@@ -16,18 +16,16 @@ function getScreensize() {
     }
 }
 
-async function captureScreenshot(){
+function captureScreenshot(callback) {
 	let promise = new Promise((resolve, reject) => {
 		  domtoimage.toPng(document.body)
 		  .then(function (dataUrl) {
-			  resolve(dataUrl);
+			  callback(dataUrl);
 		  })
 		  .catch(function (error) {
 			  reject();
 		  });
 	});
-	let result = await promise;
-	return result;
 }
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
@@ -37,14 +35,16 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 		var allElements = mapElement(htmlNode, "//html[1]", {
 			"//html[1]": html
 		});
-		sendResponse({
-			'allElements' : JSON.stringify(allElements),
-			'screenshot' : captureScreenshot(),
-			'title' : document.title,
-			'url' : window.location.href,
-			'os' : getOs(),
-			'browser' : getBrowser(),
-			'screensize' : getScreensize()
+		captureScreenshot(function() {
+			sendResponse({
+				'allElements' : JSON.stringify(allElements),
+				'screenshot' : dataUrl,
+				'title' : document.title,
+				'url' : window.location.href,
+				'os' : getOs(),
+				'browser' : getBrowser(),
+				'screensize' : getScreensize()
+			});
 		});
 	}
 });
