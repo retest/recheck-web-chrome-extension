@@ -16,27 +16,28 @@ function getScreensize() {
     }
 }
 
-function captureScreenshot(callback) {
+async function captureScreenshot(callback) {
 	let promise = new Promise((resolve, reject) => {
 		  domtoimage.toPng(document.body)
 		  .then(function (dataUrl) {
 			  callback(dataUrl);
 		  })
 		  .catch(function (error) {
-			  reject();
+			  callback();
 		  });
 	});
 }
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 	if (request.message === 'recheck-web_clicked') {
-		var htmlNode = document.getElementsByTagName("html")[0];
-		var html = transform(htmlNode);
-		var allElements = mapElement(htmlNode, "//html[1]", {
-			"//html[1]": html
-		});
-		captureScreenshot(function() {
-			sendResponse({
+		captureScreenshot(function(dataUrl) {
+			var htmlNode = document.getElementsByTagName("html")[0];
+			var html = transform(htmlNode);
+			var allElements = mapElement(htmlNode, "//html[1]", {
+				"//html[1]": html
+			});
+			chrome.runtime.sendMessage({
+				'message' : 'recheck-web-send_data',
 				'allElements' : JSON.stringify(allElements),
 				'screenshot' : dataUrl,
 				'title' : document.title,
@@ -46,5 +47,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 				'screensize' : getScreensize()
 			});
 		});
+		sendResponse();
 	}
 });
