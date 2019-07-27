@@ -53,7 +53,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 								'url' : REPORT_DASHBOARD_URL
 							});
 						} else {
-							alert('Error interacting with retest: ' + xhr.response);
+							alert('Error interacting with the retest server:\n\n' + xhr.response + '\n\nPlease refresh this page and try again. If it still does not work, please contact support: support@retest.de');
 						}
 					} else if (xhr.status == 403) {
 						alert('Something is wrong with your access rights.\nPlease contact support: support@retest.de');
