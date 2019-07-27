@@ -31,6 +31,10 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 		chrome.tabs.sendMessage(activeTabId, {
 			'message' : 'recheck-web_clicked'
 		}, function(response) {
+			if (response == null) {
+				alert('There was an error in the recheck plugin. Please refresh this page and try again.\n\nIf it still does not work, please consider reporting a bug at\nhttps://github.com/retest/recheck-web-chrome-extension/issues\n\nThank you!');
+				return;
+			}
 			var name = prompt('Please enter the name of the check: ', response.title);
 			if (name == null || name == '') {
 				return;
