@@ -18,7 +18,7 @@ function getScreensize() {
 
 async function captureScreenshot(callback) {
 	let promise = new Promise((resolve, reject) => {
-		  domtoimage.toPng(document.body)
+		  domtoimage.toJpeg(document.body, { quality: 0.3 })
 		  .then(function (dataUrl) {
 			  callback(dataUrl);
 		  })
