@@ -23,7 +23,7 @@ async function captureScreenshot(callback) {
 			  callback(dataUrl);
 		  })
 		  .catch(function (error) {
-			  callback();
+			  callback('Error creating screenshot for ' + window.location.href);
 		  });
 	});
 }
