@@ -16,17 +16,18 @@ function getScreensize() {
     }
 }
 
-function getScreenshot() {
-	domtoimage.toPng(document.body).then(function(dataUrl) {
-		sendResponse({
-			'allElements' : JSON.stringify(allElements),
-			'title' : document.title,
-			'screenshot' : dataUrl
-		});
-    }
-	).catch(function(error) {
-		console.error('oops, something went wrong: ' + error);
+async function captureScreenshot(){
+	let promise = new Promise((resolve, reject) => {
+		  domtoimage.toPng(document.body)
+		  .then(function (dataUrl) {
+			  resolve(dataUrl);
+		  })
+		  .catch(function (error) {
+			  reject();
+		  });
 	});
+	let result = await promise;
+	return result;
 }
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
@@ -38,7 +39,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 		});
 		sendResponse({
 			'allElements' : JSON.stringify(allElements),
-			'screenshot' : getScreenshot(),
+			'screenshot' : captureScreenshot(),
 			'title' : document.title,
 			'url' : window.location.href,
 			'os' : getOs(),
