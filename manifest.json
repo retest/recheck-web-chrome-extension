@@ -8,7 +8,7 @@
 			"matches": [
 				"https://*/*",
 				"http://*/*",
-				"file:///*"
+				"file://*"
 			],
 			"js": [
 				"dom-to-image.min.2.6.0.js",
