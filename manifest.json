@@ -3,6 +3,9 @@
 	"name": "recheck-web",
 	"description": "Click to recheck this website",
 	"version": "0.3",
+	"permissions": [
+		"activeTab"
+	],
 	"content_scripts": [
 		{
 			"matches": [
@@ -11,7 +14,6 @@
 				"file://*"
 			],
 			"js": [
-				"dom-to-image.min.2.6.0.js",
 				"getAllElementsByPath.js",
 				"content.js"
 			]
@@ -31,9 +33,9 @@
 		"login.js",
 		"keycloak.min.js"
 	],
-  "icons": {
-    "16": "icon16.png",
-    "48": "icon48.png",
-    "128": "icon128.png"
-  }
+	"icons": {
+		"16": "icon16.png",
+		"48": "icon48.png",
+		"128": "icon128.png"
+	}
 }
