@@ -81,7 +81,6 @@ window.CaptureAPI = (function() {
 											if (splitnotifier) {
 												splitnotifier();
 											}
-											$('screenshot-count').innerText = screenshots.length;
 										}
 									}
 
