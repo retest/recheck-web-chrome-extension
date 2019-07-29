@@ -1,3 +1,7 @@
-This is a convenient demo to check web pages using recheck-web (https://github.com/retest/recheck-web). When clicking the button, it will send all of the website data to retest (https://retest.de/), where it will be either stored as Golden Master or compared to an existing Golden Master and the differences to that calculated.
+This is a convenient demo to check web pages for differences using recheck-web. When clicking the button, it will send all of the website data to retest (https://retest.de/), where it will be either stored as Golden Master for later comparison or compared to an existing Golden Master and the differences be highlighted.
 
-The result will be generated in the form of a retest report (at http://garkbit.prod.cloud.retest.org/dashboard), for which either the review GUI (https://retest.de/review/) or the open source recheck.cli (https://github.com/retest/recheck.cli) are needed. You need to create a retest account (https://sso.prod.cloud.retest.org/auth/realms/customer/account/) or setup the service locally and have the data sent to that service.
+The result will be generated in the form of a retest report, for which either the review GUI (https://retest.de/review/) or the open source recheck.cli (https://github.com/retest/recheck.cli) are needed. Using the review GUI, you can use filters to ignore style differences, positioning differences or create your own filter. 
+
+You need to create a free retest account to use this extension.
+
+recheck-web is an open source product at https://github.com/retest/recheck-web.
