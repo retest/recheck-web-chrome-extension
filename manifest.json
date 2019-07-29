@@ -24,6 +24,7 @@
 	},
 	"background": {
 		"scripts": [
+			"full-page-screen-capture-api.js",
 			"background.js"
 		],
 		"persistent": true

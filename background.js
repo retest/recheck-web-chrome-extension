@@ -11,28 +11,26 @@ var activeWindowId;
 var activeTab;
 var activeTabId;
 
+function errorHandler(reason) {
+    console.log(reason);
+}
+
+function progress(complete) {}
+
+function splitnotifier() {
+    console.log('split-image');
+}
+
 function requestScreenshots() {
-	chrome.tabs.captureVisibleTab(activeWindowId, {
-		format : 'jpeg',
-		quality : 50
-	}, function(dataUrl) {
-		chrome.tabs.sendMessage(activeTabId, {
-			'message' : 'recheck-web_resize_img',
-			'dataUrl' : dataUrl,
-			'width' : 1200,
-			'height' : 800
-		});
-	});
+    CaptureAPI.captureToBlobs(activeTab, function(blobs){
+    	sendData(data, blobs, token);
+    }, errorHandler, progress, splitnotifier);
 }
 
 function requestData() {
 	chrome.tabs.sendMessage(activeTabId, {
 		'message' : 'recheck-web_clicked'
 	}, function(response) {
-		if (response == null) {
-			alert(ERROR_MSG);
-			return;
-		}
 		data = response;
 	});
 }
@@ -61,13 +59,14 @@ function sendData(request, dataUrl, token) {
 	}
 	xhr.send(JSON.stringify({
 		'allElements' : JSON.parse(request.allElements),
-		'screenshot' : dataUrl,
+		'screenshots' : dataUrl,
 		'name' : name,
 		'title' : request.title,
 		'url' : request.url,
 		'os' : request.os,
 		'browser' : request.browser,
-		'screensize' : request.screensize
+		'screenWidth' : request.screenWidth,
+		'screenHeight' : request.screenHeight
 	}));
 }
 
