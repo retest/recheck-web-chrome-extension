@@ -78,7 +78,7 @@ function handleServerResponse(readyState, status, response, name) {
 	if (readyState === 4) {
 		if (status == 200) {
 			if (response === RESPONSE_GOLDEN_MASTER_CREATED) {
-				alert('Created Golden Master ' + name);
+				alert('Created Golden Master "' + name + '".');
 			} else if (response === RESPONSE_REPORT_CREATED) {
 				chrome.tabs.create({
 					'url' : REPORT_DASHBOARD_URL
