@@ -1,9 +1,9 @@
 {
-	"manifest_version": 2,
 	"name": "recheck-web",
-	"short_name" : "recheck-web Demo",
-	"description": "Click to recheck this website",
 	"version": "0.4.3",
+	"manifest_version": 2,
+	"short_name" : "recheck-web Demo",
+	"description": "One-click difference checking of websites.",
 	"permissions": [
 		"activeTab"
 	],
