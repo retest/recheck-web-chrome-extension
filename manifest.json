@@ -1,6 +1,6 @@
 {
 	"name": "recheck-web",
-	"version": "0.4.3",
+	"version": "0.4.4",
 	"manifest_version": 2,
 	"short_name": "recheck-web Demo",
 	"description": "One-click difference checking of websites.",
