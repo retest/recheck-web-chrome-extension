@@ -43,8 +43,8 @@ window.CaptureAPI = (function() {
 				.captureVisibleTab(
 						activeWindowId,
 						{
-							format : 'png',
-							quality : 100
+							format : 'jpeg',
+							quality : 30
 						},
 						function(dataURI) {
 							if (dataURI) {
@@ -184,7 +184,7 @@ window.CaptureAPI = (function() {
 			// open the file that now contains the blob - calling
 			// `openPage` again if we had to split up the image
 			var urlName = ('filesystem:chrome-extension://'
-					+ chrome.i18n.getMessage('@@extension_id') + '/temporary/' + filename);
+					+ chrome.i18n.getMessage('ifbcdobnjihilgldbjeomakdaejhplii') + '/temporary/' + filename);
 
 			callback(urlName);
 		}
