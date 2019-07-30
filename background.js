@@ -22,9 +22,13 @@ function splitnotifier() {
 }
 
 function requestScreenshots() {
-	CaptureAPI.captureToBlobs(activeTab, function(blobs) {
+	CaptureAPI.captureToBlobs(activeTab, function(dataUrls) {
 		console.log("Requesting screenshots.");
-		sendData(data, blobs, token);
+		dataUrlsLength = dataUrls.length;
+		chrome.tabs.sendMessage(activeTabId, {
+			'message' : 'recheck-web_resize_img',
+			'dataUrls' : dataUrls
+		});
 	}, errorHandler, progress, splitnotifier);
 }
 
@@ -72,6 +76,12 @@ function sendData(request, dataUrl, token) {
 		'screenWidth' : request.screenWidth,
 		'screenHeight' : request.screenHeight
 	}));
+	// cleanup
+	data = null;
+	dataUrls = [];
+	activeWindowId = null;
+	activeTab = null;
+	activeTabId = null;
 }
 
 function handleServerResponse(readyState, status, response, name) {
@@ -100,8 +110,9 @@ function handleServerResponse(readyState, status, response, name) {
 // requestLogin
 // when login
 var token;
-// requestScreenshot
-var screenshot;
+// requestScreenshots
+var dataUrls = [];
+var dataUrlsLength;
 // requestData
 var data;
 // when both
@@ -135,9 +146,14 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 		token = request.token;
 		requestData();
 		requestScreenshots();
+		sendResponse();
 	}
 	if (request.message === 'recheck-web_resize_img') {
 		console.log("Receiving resized image.");
-		sendData(data, request.dataUrl, token);
+		dataUrls.push(request.dataUrl);
+		if (dataUrls.length === dataUrlsLength) {
+			sendData(data, dataUrls, token);
+		}
+		sendResponse();
 	}
 });
