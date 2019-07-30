@@ -29,6 +29,7 @@ window.CaptureAPI = (function() {
 	}
 
 	function initiateCapture(tab, callback) {
+		console.log("Sending scroll request.");
 		chrome.tabs.sendMessage(tab.id, {
 			msg : 'scrollPage'
 		}, function() {
@@ -39,6 +40,7 @@ window.CaptureAPI = (function() {
 	}
 
 	function capture(data, screenshots, sendResponse, splitnotifier) {
+		console.log("Capturing screenshot.");
 		chrome.tabs
 				.captureVisibleTab(
 						activeWindowId,
@@ -102,6 +104,7 @@ window.CaptureAPI = (function() {
 									// send back log data for debugging (but
 									// keep it truthy to
 									// indicate success)
+									console.log("Sending screenshot.");
 									sendResponse(JSON.stringify(data, null, 4) || true);
 								};
 								image.src = dataURI;
@@ -217,6 +220,7 @@ window.CaptureAPI = (function() {
 	}
 
 	function captureToBlobs(tab, callback, errback, progress, splitnotifier) {
+		console.log("Received screenshot request.");
 		var loaded = false, screenshots = [], timeout = 3000, timedOut = false, noop = function() {
 		};
 
@@ -233,6 +237,7 @@ window.CaptureAPI = (function() {
 		chrome.runtime.onMessage.addListener(function(request, sender,
 				sendResponse) {
 			if (request.msg === 'capture') {
+				console.log("Received capture request.");
 				progress(request.complete);
 				capture(request, screenshots, sendResponse, splitnotifier);
 

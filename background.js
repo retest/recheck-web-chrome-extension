@@ -23,11 +23,13 @@ function splitnotifier() {
 
 function requestScreenshots() {
 	CaptureAPI.captureToBlobs(activeTab, function(blobs) {
+		console.log("Requesting screenshots.");
 		sendData(data, blobs, token);
 	}, errorHandler, progress, splitnotifier);
 }
 
 function requestData() {
+	console.log("Requesting data.");
 	chrome.tabs.sendMessage(activeTabId, {
 		'message' : 'recheck-web_clicked'
 	}, function(response) {
@@ -36,6 +38,7 @@ function requestData() {
 }
 
 function requestLogin() {
+	console.log("Requesting login.");
 	chrome.windows.create({
 		'url' : 'login.html',
 		'left' : 100,
@@ -46,6 +49,7 @@ function requestLogin() {
 }
 
 function sendData(request, dataUrl, token) {
+	console.log("Sending data to " + MAPPING_SERVICE_URL);
 	var name = prompt('Please enter the name of the check: ', request.title);
 	if (name == null || name == '') {
 		return;
@@ -127,11 +131,13 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 	if (request.message === 'recheck-web_login') {
+		console.log("Receiving login.");
 		token = request.token;
 		requestData();
 		requestScreenshots();
 	}
 	if (request.message === 'recheck-web_resize_img') {
+		console.log("Receiving resized image.");
 		sendData(data, request.dataUrl, token);
 	}
 });

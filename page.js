@@ -3,6 +3,7 @@ var CAPTURE_DELAY = 150;
 
 function onMessage(data, sender, callback) {
     if (data.msg === 'scrollPage') {
+    	console.log("Received scroll request.");
         getPositions(callback);
         return true;
     } else if (data.msg == 'logMessage') {
@@ -108,6 +109,7 @@ function getPositions(callback) {
             if (callback) {
                 callback();
             }
+            console.log("Returning after cleaning up.");
             return;
         }
 
@@ -133,7 +135,8 @@ function getPositions(callback) {
         window.setTimeout(function() {
             // In case the below callback never returns, cleanup
             var cleanUpTimeout = window.setTimeout(cleanUp, 1250);
-
+            
+            console.log("Scrolled to " + x + ", " + y + ", reporting back.");
             chrome.runtime.sendMessage(data, function(captured) {
                 window.clearTimeout(cleanUpTimeout);
 
