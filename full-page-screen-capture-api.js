@@ -45,8 +45,8 @@ window.CaptureAPI = (function() {
 				.captureVisibleTab(
 						activeWindowId,
 						{
-							format : 'jpeg',
-							quality : 30
+							format : 'png',
+							quality : 100
 						},
 						function(dataURI) {
 							if (dataURI) {
