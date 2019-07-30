@@ -1,6 +1,6 @@
 // content.js
 
-const WANTED_WIDTH = 1200;
+const WANTED_WIDTH = 800;
 
 function getOs() {
 	return navigator.oscpu;
