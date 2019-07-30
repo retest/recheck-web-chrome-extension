@@ -1,6 +1,7 @@
 {
 	"manifest_version": 2,
 	"name": "recheck-web",
+	"short_name" : "recheck-web Demo",
 	"description": "Click to recheck this website",
 	"version": "0.4.3",
 	"permissions": [
