@@ -2,23 +2,12 @@
 	"name": "recheck-web",
 	"version": "0.4.3",
 	"manifest_version": 2,
-	"short_name" : "recheck-web Demo",
+	"short_name": "recheck-web Demo",
 	"description": "One-click difference checking of websites.",
 	"permissions": [
-		"activeTab"
-	],
-	"content_scripts": [
-		{
-			"matches": [
-				"https://*/*",
-				"http://*/*",
-				"file://*"
-			],
-			"js": [
-				"getAllElementsByPath.js",
-				"content.js"
-			]
-		}
+		"activeTab",
+		"https://*.retest.org/",
+		"http://localhost:8080/"
 	],
 	"browser_action": {
 		"default_icon": "icon.png"

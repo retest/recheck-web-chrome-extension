@@ -1,7 +1,7 @@
 // background.js
 
-const MAPPING_SERVICE_URL = 'http://babelfish.dev.cloud.retest.org/api/v1.3.0/paths-webdata-mapping';
-const REPORT_DASHBOARD_URL = 'http://garkbit.dev.cloud.retest.org/dashboard';
+const MAPPING_SERVICE_URL = 'https://babelfish.dev.cloud.retest.org/api/v1.3.0/paths-webdata-mapping';
+const REPORT_DASHBOARD_URL = 'https://garkbit.dev.cloud.retest.org/dashboard';
 const RESPONSE_GOLDEN_MASTER_CREATED = 'recheck-web-Golden-Master-created';
 const RESPONSE_REPORT_CREATED = 'recheck-web-Report-created';
 
@@ -12,19 +12,19 @@ var activeTab;
 var activeTabId;
 
 function errorHandler(reason) {
-    console.log(reason);
+	console.log(reason);
 }
 
 function progress(complete) {}
 
 function splitnotifier() {
-    console.log('split-image');
+	console.log('split-image');
 }
 
 function requestScreenshots() {
-    CaptureAPI.captureToBlobs(activeTab, function(blobs){
-    	sendData(data, blobs, token);
-    }, errorHandler, progress, splitnotifier);
+	CaptureAPI.captureToBlobs(activeTab, function(blobs) {
+		sendData(data, blobs, token);
+	}, errorHandler, progress, splitnotifier);
 }
 
 function requestData() {
@@ -115,6 +115,12 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 			activeTab = tabs[0];
 			activeTabId = activeTab.id;
 			requestLogin();
+		});
+		chrome.tabs.executeScript(activeTabId, {
+			file : 'getAllElementsByPath.js'
+		});
+		chrome.tabs.executeScript(activeTabId, {
+			file : 'content.js'
 		});
 	});
 });
