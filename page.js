@@ -1,6 +1,9 @@
 
 var CAPTURE_DELAY = 150;
 
+var fullWidth;
+var fullHeight;
+
 function onMessage(data, sender, callback) {
     if (data.msg === 'scrollPage') {
     	console.log("Received scroll request.");
@@ -40,8 +43,8 @@ function getPositions(callback) {
             document.documentElement.scrollWidth,
             body ? body.offsetWidth : 0,
             document.documentElement.offsetWidth
-        ],
-        heights = [
+        ];
+     var heights = [
             document.documentElement.clientHeight,
             body ? body.scrollHeight : 0,
             document.documentElement.scrollHeight,
@@ -51,10 +54,10 @@ function getPositions(callback) {
             //  .reduce(function(val, elt) {
             //      var h = elt.offsetHeight; return h > val ? h : val;
             //  }, 0))
-        ],
-        fullWidth = max(widths),
-        fullHeight = max(heights),
-        windowWidth = window.innerWidth,
+        ];
+     fullWidth = max(widths);
+     fullHeight = max(heights);
+     var windowWidth = window.innerWidth,
         windowHeight = window.innerHeight,
         arrangements = [],
         // pad the vertical scrolling to try to deal with
@@ -65,6 +68,7 @@ function getPositions(callback) {
         yPos = fullHeight - windowHeight,
         xPos,
         numArrangements;
+
 
     // During zooming, there can be weird off-by-1 types of things...
     if (fullWidth <= xDelta + 1) {
