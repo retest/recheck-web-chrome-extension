@@ -65,6 +65,7 @@ window.CaptureAPI = (function() {
 									if (data.windowWidth !== image.width) {
 										var scale = image.width
 												/ data.windowWidth;
+										console.log("Found window width is not image width, using scaele: " + scale);
 										data.x *= scale;
 										data.y *= scale;
 										data.totalWidth *= scale;
@@ -92,6 +93,7 @@ window.CaptureAPI = (function() {
 											screenshots)
 											.forEach(
 													function(screenshot) {
+														console.log("Drawing image on " + (data.x - screenshot.left) + "/" + (data.y - screenshot.top) + ".");
 														screenshot.ctx
 																.drawImage(
 																		image,
