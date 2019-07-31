@@ -1,13 +1,11 @@
 {
-	"name": "recheck-web",
-	"version": "0.4.4",
+	"name": "recheck-web Demo",
+	"version": "0.5",
 	"manifest_version": 2,
-	"short_name": "recheck-web Demo",
 	"description": "One-click difference checking of websites.",
 	"permissions": [
 		"activeTab",
-		"https://*.retest.org/",
-		"http://localhost:8080/"
+		"https://*.retest.org/"
 	],
 	"browser_action": {
 		"default_icon": "icon.png"
