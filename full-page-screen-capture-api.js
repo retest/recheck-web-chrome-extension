@@ -197,7 +197,7 @@ window.CaptureAPI = (function() {
 			file : 'page.js'
 		}, function() {
 			if (timedOut) {
-				console.error('Timed out too early while waiting for ' + 'chrome.tabs.executeScript. Try increasing the timeout.');
+				console.error('Timed out too early while waiting for chrome.tabs.executeScript. Try increasing the timeout.');
 			} else {
 				loaded = true;
 				progress(0);
