@@ -22,9 +22,10 @@ function splitnotifier() {
 }
 
 function requestScreenshots() {
+	console.log("Requesting screenshots.");
 	CaptureAPI.captureToBlobs(activeTab, function(dataUrls) {
-		console.log("Requesting screenshots.");
 		dataUrlsLength = dataUrls.length;
+		console.log("Received screenshots, now requesting resize.");
 		chrome.tabs.sendMessage(activeTabId, {
 			'message' : 'recheck-web_resize_img',
 			'dataUrls' : dataUrls
