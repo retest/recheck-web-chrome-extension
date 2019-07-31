@@ -234,10 +234,8 @@ window.CaptureAPI = (function() {
 			errback('invalid url'); // TODO errors
 		}
 
-		// TODO will this stack up if run multiple times? (I think it will get
-		// cleared?)
-		chrome.runtime.onMessage.addListener(function(request, sender,
-				sendResponse) {
+		
+		var listener = function(request, sender, sendResponse) {
 			if (request.msg === 'capture') {
 				console.log("Received capture request.");
 				progress(request.complete);
@@ -251,7 +249,11 @@ window.CaptureAPI = (function() {
 				//
 				return true;
 			}
-		});
+		};
+		if (!window.hasCaptureListener) {
+			window.hasCaptureListener = true;
+			chrome.runtime.onMessage.addListener(listener);
+		}
 
 		chrome.tabs
 				.executeScript(
