@@ -38,7 +38,7 @@ function requestData() {
 	chrome.tabs.sendMessage(activeTabId, {
 		'message' : 'recheck-web_clicked'
 	}, function(response) {
-		data = response;
+		sendData(response, dataUrls, token);
 	});
 }
 
@@ -115,8 +115,6 @@ var token;
 var dataUrls = [];
 var dataUrlsLength;
 // requestData
-var data;
-// when both
 // send all
 
 // Called when the user clicks on the browser action.
@@ -145,7 +143,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 	if (request.message === 'recheck-web_login') {
 		console.log("Receiving login.");
 		token = request.token;
-		requestData();
 		requestScreenshots();
 		sendResponse();
 	}
@@ -153,7 +150,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 		console.log("Receiving resized image.");
 		dataUrls.push(request.dataUrl);
 		if (dataUrls.length === dataUrlsLength) {
-			sendData(data, dataUrls, token);
+			requestData();
 		}
 		sendResponse();
 	}
