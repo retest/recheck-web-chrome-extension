@@ -27,6 +27,8 @@ function requestScreenshots() {
 		dataUrlsLength = dataUrls.length;
 		if (dataUrlsLength === 0) {
 			alert(ERROR_MSG);
+			console.error("No screenshots received, aborting...");
+			return;
 		}
 		console.log("Received screenshots, now requesting resize.");
 		chrome.tabs.sendMessage(activeTabId, {
