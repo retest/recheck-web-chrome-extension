@@ -1,6 +1,6 @@
 // content.js
 
-const WANTED_WIDTH = 1200;
+var WANTED_WIDTH = 800;
 
 function getOs() {
 	return navigator.oscpu;
@@ -8,6 +8,28 @@ function getOs() {
 
 function getBrowser() {
 	return navigator.vendor + ' ' + navigator.vendorSub;
+}
+
+function resizeDataUrl(dataUrl) {
+	var img = document.createElement('img');
+
+	img.onload = function() {
+		var canvas = document.createElement('canvas');
+		var ctx = canvas.getContext('2d');
+
+		canvas.width = WANTED_WIDTH;
+		canvas.height = img.height * (WANTED_WIDTH / img.width);
+
+		ctx.drawImage(this, 0, 0, canvas.width, canvas.height);
+
+		var newDataUrl = canvas.toDataURL();
+		chrome.runtime.sendMessage({
+			'message' : 'recheck-web_resize_img',
+			'dataUrl' : newDataUrl
+		});
+	};
+
+	img.src = dataUrl;
 }
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
@@ -26,11 +48,12 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 			'browser' : getBrowser(),
 			'screenWidth' : screen.width,
 			'screenHeight' : screen.height
-			
 		});
 	}
 	if (request.message === 'recheck-web_resize_img') {
-		resizeDataUrl(request.dataUrl);
+		request.dataUrls.forEach(function(dataUrl) {
+			resizeDataUrl(dataUrl);
+		});
 		sendResponse();
 	}
 });

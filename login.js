@@ -8,6 +8,7 @@ var keycloak = Keycloak({
 window.addEventListener("load", function(event) {
     keycloak.init({ onLoad: 'login-required' })
         .success(function(){
+        	console.log("Sending login info.")
 	        chrome.runtime.sendMessage({
 	        	'message': 'recheck-web_login',
 	        	'token': keycloak.token

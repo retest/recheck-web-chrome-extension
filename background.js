@@ -22,20 +22,33 @@ function splitnotifier() {
 }
 
 function requestScreenshots() {
-	CaptureAPI.captureToBlobs(activeTab, function(blobs) {
-		sendData(data, blobs, token);
+	console.log("Requesting screenshots.");
+	CaptureAPI.captureToDataUrls(activeTab, function(dataUrls) {
+		dataUrlsLength = dataUrls.length;
+		if (dataUrlsLength === 0) {
+			alert(ERROR_MSG);
+			console.error("No screenshots received, aborting...");
+			return;
+		}
+		console.log("Received screenshots, now requesting resize.");
+		chrome.tabs.sendMessage(activeTabId, {
+			'message' : 'recheck-web_resize_img',
+			'dataUrls' : dataUrls
+		});
 	}, errorHandler, progress, splitnotifier);
 }
 
 function requestData() {
+	console.log("Requesting data.");
 	chrome.tabs.sendMessage(activeTabId, {
 		'message' : 'recheck-web_clicked'
 	}, function(response) {
-		data = response;
+		sendData(response, dataUrls, token);
 	});
 }
 
 function requestLogin() {
+	console.log("Requesting login.");
 	chrome.windows.create({
 		'url' : 'login.html',
 		'left' : 100,
@@ -46,6 +59,7 @@ function requestLogin() {
 }
 
 function sendData(request, dataUrl, token) {
+	console.log("Sending data to " + MAPPING_SERVICE_URL);
 	var name = prompt('Please enter the name of the check: ', request.title);
 	if (name == null || name == '') {
 		return;
@@ -68,6 +82,12 @@ function sendData(request, dataUrl, token) {
 		'screenWidth' : request.screenWidth,
 		'screenHeight' : request.screenHeight
 	}));
+	// cleanup
+	data = null;
+	dataUrls = [];
+	activeWindowId = null;
+	activeTab = null;
+	activeTabId = null;
 }
 
 function handleServerResponse(readyState, status, response, name) {
@@ -96,11 +116,10 @@ function handleServerResponse(readyState, status, response, name) {
 // requestLogin
 // when login
 var token;
-// requestScreenshot
-var screenshot;
+// requestScreenshots
+var dataUrls = [];
+var dataUrlsLength;
 // requestData
-var data;
-// when both
 // send all
 
 // Called when the user clicks on the browser action.
@@ -127,11 +146,17 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 	if (request.message === 'recheck-web_login') {
+		console.log("Receiving login.");
 		token = request.token;
-		requestData();
 		requestScreenshots();
+		sendResponse();
 	}
 	if (request.message === 'recheck-web_resize_img') {
-		sendData(data, request.dataUrl, token);
+		console.log("Receiving resized image.");
+		dataUrls.push(request.dataUrl);
+		if (dataUrls.length === dataUrlsLength) {
+			requestData();
+		}
+		sendResponse();
 	}
 });
