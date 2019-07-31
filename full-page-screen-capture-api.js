@@ -9,6 +9,7 @@ window.CaptureAPI = (function() {
 	//
 	var matches = [ 'http://*/*', 'https://*/*', 'ftp://*/*', 'file://*/*' ];
 	var noMatches = [ /^https?:\/\/chrome.google.com\/.*$/ ];
+	var listener;
 
 	function isValidUrl(url) {
 		// couldn't find a better way to tell if executeScript
@@ -36,6 +37,7 @@ window.CaptureAPI = (function() {
 		}, function() {
 			// We're done taking snapshots of all parts of the window. Display
 			// the resulting full screenshot images in a new browser tab.
+			chrome.runtime.onMessage.removeListener(listener);
 			callback();
 		});
 	}
@@ -173,7 +175,7 @@ window.CaptureAPI = (function() {
 			errback('invalid url'); // TODO errors
 		}
 
-		var listener = function(request, sender, sendResponse) {
+		listener = function(request, sender, sendResponse) {
 			if (request.msg === 'capture') {
 				console.log("Received capture request.");
 				progress(request.complete);
@@ -188,10 +190,7 @@ window.CaptureAPI = (function() {
 				return true;
 			}
 		};
-		if (!window.hasCaptureListener) {
-			window.hasCaptureListener = true;
-			chrome.runtime.onMessage.addListener(listener);
-		}
+		chrome.runtime.onMessage.addListener(listener);
 
 		chrome.tabs.executeScript(tab.id, {
 			file : 'page.js'
