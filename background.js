@@ -99,8 +99,7 @@ function handleServerResponse(readyState, status, response, name) {
 					'url' : REPORT_DASHBOARD_URL
 				});
 			} else {
-				alert('Error interacting with the retest server:\n\n'
-						+ response
+				alert('Error interacting with the retest server:\n\n' + response
 						+ '\n\nPlease refresh this page and try again. If it still does not work, please contact support: support@retest.de');
 			}
 		} else if (status == 403) {
