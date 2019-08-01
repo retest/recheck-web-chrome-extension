@@ -10,6 +10,9 @@ const ERROR_MSG = 'There was an error in the recheck plugin. Please refresh this
 var activeWindowId;
 var activeTab;
 var activeTabId;
+var dataUrls = [];
+var dataUrlsLength;
+var token;
 
 function errorHandler(reason) {
 	console.log(reason);
@@ -21,13 +24,31 @@ function splitnotifier() {
 	console.log('split-image');
 }
 
+function abort(msg) {
+	chrome.runtime.sendMessage({
+		'message' : 'recheck-web_closePopup'
+	});
+	if (msg) {
+		alert(msg);
+	}
+	// cleanup
+	data = null;
+	dataUrls = [];
+	activeWindowId = null;
+	activeTab = null;
+	activeTabId = null;
+	return;
+}
+
 function requestScreenshots() {
 	console.log("Requesting screenshots.");
+	chrome.runtime.sendMessage({
+		'message' : 'recheck-web_captureScreenshot'
+	});
 	CaptureAPI.captureToDataUrls(activeTab, function(dataUrlsInput) {
 		if (dataUrlsInput.length === 0) {
-			alert(ERROR_MSG);
 			console.error("No screenshots received, aborting...");
-			return;
+			abort(ERROR_MSG);
 		}
 		dataUrlsLength = dataUrlsInput.length;
 		console.log("Received " + dataUrlsLength + " screenshots, now requesting resize.");
@@ -40,6 +61,9 @@ function requestScreenshots() {
 
 function requestData() {
 	console.log("Requesting data.");
+	chrome.runtime.sendMessage({
+		'message' : 'recheck-web_captureData'
+	});
 	chrome.tabs.sendMessage(activeTabId, {
 		'message' : 'recheck-web_clicked'
 	}, function(response) {
@@ -75,6 +99,9 @@ function sendData(request, dataUrl, token) {
 			handleServerResponse(xhr.readyState, xhr.status, xhr.response, name);
 		}
 		console.log("Sending data to " + MAPPING_SERVICE_URL);
+		chrome.runtime.sendMessage({
+			'message' : 'recheck-web_sendData'
+		});
 		xhr.send(JSON.stringify({
 			'allElements' : JSON.parse(request.allElements),
 			'screenshots' : dataUrl,
@@ -86,16 +113,14 @@ function sendData(request, dataUrl, token) {
 			'screenWidth' : request.screenWidth,
 			'screenHeight' : request.screenHeight
 		}));
+		chrome.runtime.sendMessage({
+			'message' : 'recheck-web_processing'
+		});
 	}
-	// cleanup
-	data = null;
-	dataUrls = [];
-	activeWindowId = null;
-	activeTab = null;
-	activeTabId = null;
 }
 
 function handleServerResponse(readyState, status, response, name) {
+	abort(null);
 	if (readyState === 4) {
 		if (status == 200) {
 			if (response === RESPONSE_GOLDEN_MASTER_CREATED) {
@@ -121,36 +146,31 @@ function handleServerResponse(readyState, status, response, name) {
 // when clicked
 // requestLogin
 // when login
-var token;
 // requestScreenshots
-var dataUrls = [];
-var dataUrlsLength;
 // requestData
 // send all
 
-// Called when the user clicks on the browser action.
-chrome.browserAction.onClicked.addListener(function(tab) {
-	chrome.windows.getCurrent({}, function(window) {
-		activeWindowId = window.id;
-		// persist tabId of activeTab
-		chrome.tabs.query({
-			active : true,
-			currentWindow : true
-		}, function(tabs) {
-			activeTab = tabs[0];
-			activeTabId = activeTab.id;
-			requestLogin();
-		});
-		chrome.tabs.executeScript(activeTabId, {
-			file : 'getAllElementsByPath.js'
-		});
-		chrome.tabs.executeScript(activeTabId, {
-			file : 'content.js'
-		});
-	});
-});
-
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+	if (request.message == 'recheck-web_popupOpened') {
+		chrome.windows.getCurrent({}, function(window) {
+			activeWindowId = window.id;
+			// persist tabId of activeTab
+			chrome.tabs.query({
+				active : true,
+				currentWindow : true
+			}, function(tabs) {
+				activeTab = tabs[0];
+				activeTabId = activeTab.id;
+				requestLogin();
+			});
+			chrome.tabs.executeScript(activeTabId, {
+				file : 'getAllElementsByPath.js'
+			});
+			chrome.tabs.executeScript(activeTabId, {
+				file : 'content.js'
+			});
+		});
+	}
 	if (request.message === 'recheck-web_login') {
 		console.log("Receiving login.");
 		token = request.token;

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <meta charset=utf-8>
+      <title>recheck-web Demo</title>
+      <style>
+      
+body {
+    font: normal 12px/16px helvetica,aria,sans-serif;
+}
+
+div,p { margin: 0; padding: 0; }
+
+.clr { overflow: hidden; }
+.left { float: left; }
+.right { float: right; }
+
+a {
+    color: #082749;
+    text-decoration: none;
+}
+a:hover { color: #265c80; }
+a:active { color: #000; }
+
+#wrap {
+    width: 300px;
+    padding-top: 9px;
+    font-size: 12px;
+    color: #888;
+}
+
+#wrap>div { display: none; }
+#wrap>#loading { display: block; }
+#mascot { 
+	text-align: center;
+	width: 300px;
+  height: 250px;
+}
+
+p { word-wrap: break-word; }
+
+.error {
+    margin-top: 1em;
+    font-weight: bold;
+    color: #CA0A6D;
+}
+
+.progress {
+    color: #082749;
+}
+
+#recce {
+  animation-name: meditate-horizontally, meditate-vertically;
+  animation-duration: 2s, 2.5s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+@keyframes meditate-horizontally {
+  from {
+    padding-left: -5px;
+  }
+
+  to {
+    padding-left: 5px;
+  }
+}
+
+@keyframes meditate-vertically {
+  from {
+    padding-top: -5px; 
+  }
+
+  to {
+    padding-top: 5px; 
+  }
+}
+
+      </style>
+  </head>
+  <body>
+      <div id="wrap">
+          <div id="loading">
+              <div id="mascot">
+		              <img id="recce" src="recce-lotus.png" />
+              </div>
+              <div class="clr">
+                  <br>
+                  <p>
+                      Site capture and processing in progress.<br />
+                      A download page will open in a new window once a report is created.
+                      Please wait for the process to finish:<br />
+                  </p>
+              </div>
+          </div>
+          <div id="login" class="progress">
+              Logging user in to retest.
+          </div>
+          <div id="captureScreenshot" class="progress">
+              Capturing screenshot of the whole page.
+          </div>
+          <div id="captureData" class="progress">
+              Capturing DOM of the whole page.
+          </div>
+          <div id="sendData" class="progress">
+              Sending everything to retest.
+          </div>
+          <div id="processing" class="progress">
+              Processing everything on our servers.
+          </div>
+          <div id="invalid" class="error">
+              recheck-web cannot be run on this type of URL.
+              Try going to <a href="chrome://extensions/?id=ifbcdobnjihilgldbjeomakdaejhplii">configuration</a>
+              and enable "Allow access to file URLs" or try another page on the web.
+          </div>
+          <div id="problem" class="error">
+              Something went wrong! Try reloading the page,
+              verify javascript is enabled, and run this again.
+              <br><br>
+              If the problem persists, please report the error in the
+              <a href="https://chrome.google.com/webstore/detail/recheck-web-demo/ifbcdobnjihilgldbjeomakdaejhplii">Chrome webstore</a>.
+              Please include the URL you tried it on and the version of Chrome.
+          </div>
+      </div>
+
+      <!-- JavaScript and HTML must be in separate files for security. -->
+      <script src="popup.js"></script>
+  </body>
+</html>
