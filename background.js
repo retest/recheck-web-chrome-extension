@@ -106,6 +106,8 @@ function handleServerResponse(readyState, status, response, name) {
 			}
 		} else if (status == 403) {
 			alert('Something is wrong with your access rights.\nPlease contact support: support@retest.de');
+		} else if (status == 413) {
+			alert('Checking large sites incurrs significant traffic, processing and storage costs. Since this is only a demo, we therefore limited the size of websites that you can check.\n\nTo check larger sites, please use the full version or contact us.');
 		} else {
 			alert('Server responded with status: ' + status);
 		}
