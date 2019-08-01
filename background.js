@@ -58,8 +58,14 @@ function requestLogin() {
 	});
 }
 
+function sanitize(input) {
+	return input.replace(/\W/g, ' ').replace(/\s\s+/g, ' ').trim();
+}
+
 function sendData(request, dataUrl, token) {
-	var name = prompt('Please enter the name of the check: ', request.title);
+	var checkName = sanitize(request.title);
+	console.log("Requesting user input for " + checkName);
+	var name = prompt('Please enter the name of the check: ', checkName);
 	if (name && name != '') {
 		var xhr = new XMLHttpRequest();
 		xhr.open('POST', MAPPING_SERVICE_URL, true);
@@ -72,8 +78,8 @@ function sendData(request, dataUrl, token) {
 		xhr.send(JSON.stringify({
 			'allElements' : JSON.parse(request.allElements),
 			'screenshots' : dataUrl,
-			'name' : name,
-			'title' : request.title,
+			'name' : sanitize(name),
+			'title' : sanitize(request.title),
 			'url' : request.url,
 			'os' : request.os,
 			'browser' : request.browser,
