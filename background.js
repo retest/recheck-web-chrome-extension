@@ -59,7 +59,6 @@ function requestLogin() {
 }
 
 function sendData(request, dataUrl, token) {
-	console.log("Sending data to " + MAPPING_SERVICE_URL);
 	var name = prompt('Please enter the name of the check: ', request.title);
 	if (name && name != '') {
 		var xhr = new XMLHttpRequest();
@@ -69,6 +68,7 @@ function sendData(request, dataUrl, token) {
 		xhr.onreadystatechange = function() {
 			handleServerResponse(xhr.readyState, xhr.status, xhr.response, name);
 		}
+		console.log("Sending data to " + MAPPING_SERVICE_URL);
 		xhr.send(JSON.stringify({
 			'allElements' : JSON.parse(request.allElements),
 			'screenshots' : dataUrl,
