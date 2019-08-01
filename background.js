@@ -157,6 +157,8 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 		dataUrls.push(request.dataUrl);
 		if (dataUrls.length === dataUrlsLength) {
 			requestData();
+		} else {
+			console.log("Waiting for " + (dataUrlsLength - dataUrls.length) + " more images before continuing.");
 		}
 		sendResponse();
 	}
