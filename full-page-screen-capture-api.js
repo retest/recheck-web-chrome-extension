@@ -193,7 +193,7 @@ window.CaptureAPI = (function() {
 		chrome.runtime.onMessage.addListener(listener);
 
 		chrome.tabs.executeScript(tab.id, {
-			file : 'page.js'
+			file : 'scroll-page.js'
 		}, function() {
 			if (timedOut) {
 				console.error('Timed out too early while waiting for chrome.tabs.executeScript. Try increasing the timeout.');
