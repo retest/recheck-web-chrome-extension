@@ -61,27 +61,26 @@ function requestLogin() {
 function sendData(request, dataUrl, token) {
 	console.log("Sending data to " + MAPPING_SERVICE_URL);
 	var name = prompt('Please enter the name of the check: ', request.title);
-	if (name == null || name == '') {
-		return;
+	if (name && name != '') {
+		var xhr = new XMLHttpRequest();
+		xhr.open('POST', MAPPING_SERVICE_URL, true);
+		xhr.setRequestHeader('Content-Type', 'application/json');
+		xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+		xhr.onreadystatechange = function() {
+			handleServerResponse(xhr.readyState, xhr.status, xhr.response, name);
+		}
+		xhr.send(JSON.stringify({
+			'allElements' : JSON.parse(request.allElements),
+			'screenshots' : dataUrl,
+			'name' : name,
+			'title' : request.title,
+			'url' : request.url,
+			'os' : request.os,
+			'browser' : request.browser,
+			'screenWidth' : request.screenWidth,
+			'screenHeight' : request.screenHeight
+		}));
 	}
-	var xhr = new XMLHttpRequest();
-	xhr.open('POST', MAPPING_SERVICE_URL, true);
-	xhr.setRequestHeader('Content-Type', 'application/json');
-	xhr.setRequestHeader('Authorization', 'Bearer ' + token);
-	xhr.onreadystatechange = function() {
-		handleServerResponse(xhr.readyState, xhr.status, xhr.response, name);
-	}
-	xhr.send(JSON.stringify({
-		'allElements' : JSON.parse(request.allElements),
-		'screenshots' : dataUrl,
-		'name' : name,
-		'title' : request.title,
-		'url' : request.url,
-		'os' : request.os,
-		'browser' : request.browser,
-		'screenWidth' : request.screenWidth,
-		'screenHeight' : request.screenHeight
-	}));
 	// cleanup
 	data = null;
 	dataUrls = [];
