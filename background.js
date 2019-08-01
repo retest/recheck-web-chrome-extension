@@ -23,17 +23,17 @@ function splitnotifier() {
 
 function requestScreenshots() {
 	console.log("Requesting screenshots.");
-	CaptureAPI.captureToDataUrls(activeTab, function(dataUrls) {
-		dataUrlsLength = dataUrls.length;
-		if (dataUrlsLength === 0) {
+	CaptureAPI.captureToDataUrls(activeTab, function(dataUrlsInput) {
+		if (dataUrlsInput.length === 0) {
 			alert(ERROR_MSG);
 			console.error("No screenshots received, aborting...");
 			return;
 		}
-		console.log("Received screenshots, now requesting resize.");
+		dataUrlsLength = dataUrlsInput.length;
+		console.log("Received " + dataUrlsLength + " screenshots, now requesting resize.");
 		chrome.tabs.sendMessage(activeTabId, {
 			'message' : 'recheck-web_resize_img',
-			'dataUrls' : dataUrls
+			'dataUrls' : dataUrlsInput
 		});
 	}, errorHandler, progress, splitnotifier);
 }
