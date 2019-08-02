@@ -16,10 +16,9 @@ div,p { margin: 0; padding: 0; }
 .right { float: right; }
 
 a {
-    color: #082749;
+    color: #CA0A6D;
     text-decoration: none;
 }
-a:hover { color: #265c80; }
 a:active { color: #000; }
 
 #wrap {
@@ -43,6 +42,10 @@ p { word-wrap: break-word; }
     margin-top: 1em;
     font-weight: bold;
     color: #CA0A6D;
+}
+
+.error a {
+    text-decoration: underline;
 }
 
 .progress {
@@ -121,6 +124,12 @@ p { word-wrap: break-word; }
           </div>
           <div id="processing2" class="progress">
               We experience load, so processing takes time.
+          </div>
+          <div id="processing3" class="progress">
+              We experience heavy load... <a href="mailto:support@retest.de?subject=Chrome-Plugin">report this</a>.
+          </div>
+          <div id="processing4" class="progress">
+              We are sorry to let you wait. Try a smaller page or another time.
           </div>
           <div id="invalid" class="error">
               recheck-web cannot be run on this type of URL.

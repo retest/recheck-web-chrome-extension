@@ -33,6 +33,8 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 	if (request.message === 'recheck-web_processing') {
 		show('processing');
 		setTimeout(function(){show('processing2'); }, 10000);
+		setTimeout(function(){show('processing3'); }, 30000);
+		setTimeout(function(){show('processing4'); }, 60000);
 	}
 	if (request.message === 'recheck-web_closePopup') {
 		window.close();
