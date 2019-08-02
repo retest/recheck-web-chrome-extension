@@ -154,6 +154,10 @@ function handleServerResponse(readyState, status, response, name) {
 // send all
 
 chrome.browserAction.onClicked.addListener(function() {
+	if (activeTab) {
+		alert("Capture already in progress, please wait until finished.");
+		return;
+	}
 	chrome.windows.getCurrent({}, function(window) {
 		activeWindowId = window.id;
 		// persist tabId of activeTab
