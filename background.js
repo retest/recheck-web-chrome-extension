@@ -12,6 +12,7 @@ var activeTab;
 var activeTabId;
 var dataUrls = [];
 var dataUrlsLength;
+var reportTab;
 var token;
 
 function errorHandler(reason) {
@@ -125,6 +126,14 @@ function sendData(request, dataUrl, token) {
 	});
 }
 
+function openReports() {
+	chrome.tabs.create({
+		'url' : REPORT_DASHBOARD_URL
+	}, function(tab) {
+		reportTab = tab;
+	});
+}
+
 function handleServerResponse(readyState, status, response, name) {
 	abort(null);
 	if (readyState === 4) {
@@ -132,9 +141,18 @@ function handleServerResponse(readyState, status, response, name) {
 			if (response === RESPONSE_GOLDEN_MASTER_CREATED) {
 				alert('Created Golden Master "' + name + '".');
 			} else if (response === RESPONSE_REPORT_CREATED) {
-				chrome.tabs.create({
-					'url' : REPORT_DASHBOARD_URL
-				});
+				if (!reportTab) {
+					openReports();
+				} else {
+					chrome.tabs.get(reportTab.id, function callback() {
+						if (chrome.runtime.lastError) {
+							reportTab = null;
+							openReports();
+						} else {
+							chrome.tabs.update(reportTab.id, { 'active': true }, (tab) => { });
+						}
+					});
+				}
 			} else {
 				alert('Error interacting with the retest server:\n\n' + response
 						+ '\n\nPlease refresh this page and try again. If it still does not work, please contact support: support@retest.de');
