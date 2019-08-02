@@ -24,6 +24,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 	if (request.message === 'recheck-web_captureData') {
 		show('captureData');
 	}
+	if (request.message === 'recheck-web_requestCheckName') {
+		show('requestCheckName');
+	}
 	if (request.message === 'recheck-web_sendData') {
 		show('sendData');
 	}

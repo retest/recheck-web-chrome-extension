@@ -9,8 +9,7 @@
 	],
 	"browser_action": {
 		"default_icon": "icon.png",
-		"tooltip": "Click to create a Golden Master or a difference report of this website.",
-		"default_popup": "popup.html"
+		"tooltip": "Click to create a Golden Master or a difference report of this website."
 	},
 	"background": {
 		"scripts": [

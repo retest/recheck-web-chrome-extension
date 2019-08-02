@@ -88,6 +88,9 @@ function sanitize(input) {
 
 function sendData(request, dataUrl, token) {
 	var checkName = sanitize(request.title);
+	chrome.runtime.sendMessage({
+		'message' : 'recheck-web_requestCheckName'
+	});
 	console.log("Requesting user input for " + checkName);
 	var name = prompt('Please enter the name of the check: ', checkName);
 	if (name && name != '') {
@@ -150,27 +153,36 @@ function handleServerResponse(readyState, status, response, name) {
 // requestData
 // send all
 
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-	if (request.message == 'recheck-web_popupOpened') {
-		chrome.windows.getCurrent({}, function(window) {
-			activeWindowId = window.id;
-			// persist tabId of activeTab
-			chrome.tabs.query({
-				active : true,
-				currentWindow : true
-			}, function(tabs) {
-				activeTab = tabs[0];
-				activeTabId = activeTab.id;
-				requestLogin();
-			});
-			chrome.tabs.executeScript(activeTabId, {
-				file : 'getAllElementsByPath.js'
-			});
-			chrome.tabs.executeScript(activeTabId, {
-				file : 'content.js'
-			});
+chrome.browserAction.onClicked.addListener(function() {
+	chrome.windows.getCurrent({}, function(window) {
+		activeWindowId = window.id;
+		// persist tabId of activeTab
+		chrome.tabs.query({
+			active : true,
+			currentWindow : true
+		}, function(tabs) {
+			activeTab = tabs[0];
+			activeTabId = activeTab.id;
+			var left = activeTab.width - 700;
+			chrome.windows.create({
+				'url' : 'popup.html',
+				'type' : 'popup',
+				'left' : left,
+				'width' : 350,
+				'height' : 500
+			}, function(window) {});
+			requestLogin();
 		});
-	}
+		chrome.tabs.executeScript(activeTabId, {
+			file : 'getAllElementsByPath.js'
+		});
+		chrome.tabs.executeScript(activeTabId, {
+			file : 'content.js'
+		});
+	});
+});
+
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 	if (request.message === 'recheck-web_login') {
 		console.log("Receiving login.");
 		token = request.token;
