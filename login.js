@@ -1,6 +1,5 @@
 var keycloak = Keycloak({
-// TODO url: 'https://sso.prod.cloud.retest.org/auth',
-	url: 'https://sso.dev.cloud.retest.org/auth',
+	url: 'https://sso.prod.cloud.retest.org/auth',
     realm: 'customer',
     clientId: 'babelfish'
 });
