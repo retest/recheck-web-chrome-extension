@@ -173,10 +173,13 @@ function handleServerResponse(readyState, status, response, name) {
 						+ '\n\nPlease refresh this page and try again. If it still does not work, please contact support: support@retest.de');
 			}
 		} else if (status == 403) {
+			console.log("Server responded with status " + status);
 			alert('Something is wrong with your access rights.\nPlease contact support: support@retest.de');
 		} else if (status == 413) {
+			console.log("Server responded with status " + status);
 			alert('Website is too large for demo.\n\nChecking large sites incurrs significant traffic, processing and storage costs. Since this is only a demo, we therefore limited the size of websites that you can check.\n\nTo check larger sites, please use the full version or contact us.');
 		} else if (status >= 500 && status < 600) {
+			console.log("Server responded with status " + status);
 			alert('Error interacting with the retest server. \n\nPlease refresh this page and try again. If it still does not work, please contact support: support@retest.de');
 		} else {
 			alert('Server responded with status: ' + status);
