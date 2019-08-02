@@ -14,6 +14,7 @@ var dataUrls = [];
 var dataUrlsLength;
 var reportTab;
 var token;
+var emergencyReset;
 
 function errorHandler(reason) {
 	console.log(reason);
@@ -195,6 +196,9 @@ chrome.browserAction.onClicked.addListener(function() {
 		alert("Capture already in progress, please wait until finished.");
 		return;
 	}
+	// This is so if anything happens, at some point we get reset
+	window.clearTimeout(emergencyReset);
+	emergencyReset = setTimeout(function(){abort(); }, 600000);
 	chrome.windows.getCurrent({}, function(window) {
 		activeWindowId = window.id;
 		// persist tabId of activeTab
