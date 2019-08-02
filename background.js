@@ -87,6 +87,9 @@ function requestData() {
 }
 
 function requestLogin() {
+	chrome.runtime.sendMessage({
+		'message' : 'recheck-web_requestLogin'
+	});
 	console.log("Requesting login.");
 	chrome.windows.create({
 		'url' : 'login.html',
