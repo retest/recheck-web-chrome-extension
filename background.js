@@ -69,6 +69,9 @@ function requestData() {
 	}, function(response) {
 		sendData(response, dataUrls, token);
 	});
+	chrome.runtime.sendMessage({
+		'message' : 'recheck-web_requestCheckName'
+	});
 }
 
 function requestLogin() {
@@ -88,38 +91,38 @@ function sanitize(input) {
 
 function sendData(request, dataUrl, token) {
 	var checkName = sanitize(request.title);
-	chrome.runtime.sendMessage({
-		'message' : 'recheck-web_requestCheckName'
-	});
 	console.log("Requesting user input for " + checkName);
 	var name = prompt('Please enter the name of the check: ', checkName);
-	if (name && name != '') {
-		var xhr = new XMLHttpRequest();
-		xhr.open('POST', MAPPING_SERVICE_URL, true);
-		xhr.setRequestHeader('Content-Type', 'application/json');
-		xhr.setRequestHeader('Authorization', 'Bearer ' + token);
-		xhr.onreadystatechange = function() {
-			handleServerResponse(xhr.readyState, xhr.status, xhr.response, name);
-		}
-		console.log("Sending data to " + MAPPING_SERVICE_URL);
-		chrome.runtime.sendMessage({
-			'message' : 'recheck-web_sendData'
-		});
-		xhr.send(JSON.stringify({
-			'allElements' : JSON.parse(request.allElements),
-			'screenshots' : dataUrl,
-			'name' : sanitize(name),
-			'title' : sanitize(request.title),
-			'url' : request.url,
-			'os' : request.os,
-			'browser' : request.browser,
-			'screenWidth' : request.screenWidth,
-			'screenHeight' : request.screenHeight
-		}));
-		chrome.runtime.sendMessage({
-			'message' : 'recheck-web_processing'
-		});
+	if (name == null || name == '') {
+		abort(null);
+		return;
 	}
+
+	var xhr = new XMLHttpRequest();
+	xhr.open('POST', MAPPING_SERVICE_URL, true);
+	xhr.setRequestHeader('Content-Type', 'application/json');
+	xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+	xhr.onreadystatechange = function() {
+		handleServerResponse(xhr.readyState, xhr.status, xhr.response, name);
+	}
+	console.log("Sending data to " + MAPPING_SERVICE_URL);
+	chrome.runtime.sendMessage({
+		'message' : 'recheck-web_sendData'
+	});
+	xhr.send(JSON.stringify({
+		'allElements' : JSON.parse(request.allElements),
+		'screenshots' : dataUrl,
+		'name' : sanitize(name),
+		'title' : sanitize(request.title),
+		'url' : request.url,
+		'os' : request.os,
+		'browser' : request.browser,
+		'screenWidth' : request.screenWidth,
+		'screenHeight' : request.screenHeight
+	}));
+	chrome.runtime.sendMessage({
+		'message' : 'recheck-web_processing'
+	});
 }
 
 function handleServerResponse(readyState, status, response, name) {
@@ -173,7 +176,7 @@ chrome.browserAction.onClicked.addListener(function() {
 				'type' : 'popup',
 				'left' : left,
 				'width' : 350,
-				'height' : 500
+				'height' : 600
 			}, function(window) {});
 			requestLogin();
 		});

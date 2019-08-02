@@ -101,16 +101,26 @@ p { word-wrap: break-word; }
               Capturing screenshot of the whole page.
           </div>
           <div id="captureData" class="progress">
-              Capturing DOM of the whole page.
+              Capturing page data.
           </div>
           <div id="requestCheckName" class="progress">
-              Requesting user input: check name.
+              Requesting user input: name of the Golden Master.<br />
+              <span style="padding-left: 10px;">
+              	Either a Golden Master with this name is created, 
+              </span>
+              <br />
+              <span style="padding-left: 10px;">
+              	or the page is compared to that Golden Master.
+              </span>
           </div>
           <div id="sendData" class="progress">
               Sending everything to retest.
           </div>
           <div id="processing" class="progress">
               Processing everything on our servers.
+          </div>
+          <div id="processing2" class="progress">
+              We experience load, so processing takes time.
           </div>
           <div id="invalid" class="error">
               recheck-web cannot be run on this type of URL.
