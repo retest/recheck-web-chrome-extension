@@ -41,6 +41,17 @@ function abort(msg) {
 	return;
 }
 
+function ensureValidUrl(url) {
+	if (url.startsWith("file://")) {
+		chrome.extension.isAllowedFileSchemeAccess(function () {
+			if (chrome.runtime.lastError) {
+				abort("Local file access disabled.\n\nPlease go to the extension configuration (chrome://extensions/) and enable \"Allow access to file URLs\" for this extension.");
+			}
+		});
+	}
+	return true;
+}
+
 function requestScreenshots() {
 	console.log("Requesting screenshots.");
 	chrome.runtime.sendMessage({
@@ -190,6 +201,9 @@ chrome.browserAction.onClicked.addListener(function() {
 		}, function(tabs) {
 			activeTab = tabs[0];
 			activeTabId = activeTab.id;
+			if (!ensureValidUrl(activeTab.url)) {
+				return;
+			}
 			var left = activeTab.width - 700;
 			chrome.windows.create({
 				'url' : 'popup.html',

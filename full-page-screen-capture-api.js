@@ -4,32 +4,6 @@ window.CaptureAPI = (function() {
 	var MAX_SECONDARY_DIMENSION = 4000 * 2;
 	var MAX_AREA = MAX_PRIMARY_DIMENSION * MAX_SECONDARY_DIMENSION;
 
-	//
-	// URL Matching test - to verify we can talk to this URL
-	//
-	var matches = [ 'http://*/*', 'https://*/*', 'ftp://*/*', 'file://*/*' ];
-	var noMatches = [ /^https?:\/\/chrome.google.com\/.*$/ ];
-	var listener;
-
-	function isValidUrl(url) {
-		// couldn't find a better way to tell if executeScript
-		// wouldn't work -- so just testing against known urls
-		// for now...
-		var r, i;
-		for (i = noMatches.length - 1; i >= 0; i--) {
-			if (noMatches[i].test(url)) {
-				return false;
-			}
-		}
-		for (i = matches.length - 1; i >= 0; i--) {
-			r = new RegExp('^' + matches[i].replace(/\*/g, '.*') + '$');
-			if (r.test(url)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
 	function initiateCapture(tab, callback) {
 		console.log("Sending scroll request.");
 		chrome.tabs.sendMessage(tab.id, {
@@ -170,10 +144,6 @@ window.CaptureAPI = (function() {
 		callback = callback || noop;
 		errback = errback || noop;
 		progress = progress || noop;
-
-		if (!isValidUrl(tab.url)) {
-			errback('invalid url'); // TODO errors
-		}
 
 		listener = function(request, sender, sendResponse) {
 			if (request.msg === 'capture') {
