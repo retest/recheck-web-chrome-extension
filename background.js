@@ -160,7 +160,7 @@ function handleServerResponse(readyState, status, response, name) {
 					openReports();
 				} else {
 					chrome.tabs.get(reportTab.id, function callback() {
-						if (chrome.runtime.lastError) {
+						if (chrome.runtime.lastError || reportTab.href != REPORT_DASHBOARD_URL) {
 							reportTab = null;
 							openReports();
 						} else {
