@@ -164,6 +164,7 @@ function handleServerResponse(readyState, status, response, name) {
 							reportTab = null;
 							openReports();
 						} else {
+							chrome.tabs.reload(reportTab.id);
 							chrome.tabs.update(reportTab.id, { 'active': true }, (tab) => { });
 						}
 					});
