@@ -1,7 +1,9 @@
-This is a convenient demo to check web pages for differences using recheck-web. When clicking the button, it will send all of the website data to retest (https://retest.de/), where it will be either stored as Golden Master for later comparison or compared to the existing Golden Master with the given name and the differences be highlighted. 
+This is a convenient demo to check web pages for differences using recheck-web. When clicking the button, it will send all of the website data to retest (https://retest.de/), where it will be either stored as Golden Master (=snapshot/base-line) for later comparison or compared to the existing Golden Master with the given name and the differences be highlighted. 
 
-Using either the review GUI or the open source recheck.cli, you can filters the differences and quickly find relevant changes. This gives you unprecedented power: ignore font changes but not the text. Or ignore content but not CSS. Define your own filters with a simple git-like syntax.
+Using either the review GUI or the open source recheck.cli, you can filter the differences and quickly find relevant changes. This gives you unprecedented power: ignore font changes but not the text. Or ignore content but not CSS. Define your own filters with a simple git-like syntax.
 
 You need to create a free retest account to use this extension. It needs permission to "Read and change your data on all retest.org sites" to send login data to retest.
 
 recheck-web is an open source product at https://github.com/retest/recheck-web.
+
+YouTube Link: https://youtu.be/KsyrNqVCju0
