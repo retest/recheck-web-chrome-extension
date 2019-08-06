@@ -10,6 +10,12 @@ function hide(id) {
 	$(id).style.display = 'none';
 }
 
+window.addEventListener("beforeunload", function(event) {
+	chrome.runtime.sendMessage({
+		'message' : 'recheck-web_aborted'
+	});
+});
+
 if (chrome.runtime) {
 	chrome.runtime.sendMessage({
 		'message' : 'recheck-web_popupOpened'

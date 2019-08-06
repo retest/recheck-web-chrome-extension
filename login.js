@@ -17,3 +17,12 @@ window.addEventListener("load", function(event) {
 	}).error(function(errorData) {
 		document.getElementById('messages').innerHTML = '<b>Failed to load data. Error: ' + JSON.stringify(errorData) + '</b>';
 	});
+});
+
+if (chrome.runtime) {
+	chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+		if (request.message === 'recheck-web_aborted') {
+			window.close();
+		}
+	});
+}

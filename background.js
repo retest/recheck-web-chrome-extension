@@ -251,4 +251,8 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 		}
 		sendResponse();
 	}
+	if (request.message === 'recheck-web_aborted') {
+		console.log("Receiving abort.");
+		abort(null);
+	}
 });
