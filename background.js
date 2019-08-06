@@ -28,7 +28,7 @@ function splitnotifier() {
 
 function abort(msg) {
 	chrome.runtime.sendMessage({
-		'message' : 'recheck-web_closePopup'
+		'message' : 'recheck-web_aborted'
 	});
 	if (msg) {
 		alert(msg);
