@@ -209,11 +209,9 @@ function recheck(){
 			if (!ensureValidUrl(activeTab.url)) {
 				return;
 			}
-			var left = activeTab.width - 700;
 			chrome.windows.create({
 				'url' : 'popup.html',
 				'type' : 'popup',
-				'left' : left,
 				'width' : 350,
 				'height' : 600
 			}, function(window) {});
