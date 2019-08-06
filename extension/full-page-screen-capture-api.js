@@ -152,11 +152,8 @@ window.CaptureAPI = (function() {
 				capture(request, screenshots, sendResponse, splitnotifier);
 
 				// https://developer.chrome.com/extensions/messaging#simple
-				//
-				// If you want to asynchronously use sendResponse, add return
-				// true;
+				// If you want to asynchronously use sendResponse, add return true;
 				// to the onMessage event handler.
-				//
 				return true;
 			}
 		};
