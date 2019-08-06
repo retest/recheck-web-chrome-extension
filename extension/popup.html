@@ -15,7 +15,7 @@ div,p { margin: 0; padding: 0; }
 .left { float: left; }
 .right { float: right; }
 
-a {
+a, .important {
     color: #CA0A6D;
     text-decoration: none;
 }
@@ -96,9 +96,12 @@ p { word-wrap: break-word; }
                   </p>
                   <br />
               </div>
-		          <div id="login" class="progress">
-		              Checking login status. <a href="https://garkbit.prod.cloud.retest.org/logout" target="_blank">Logout</a>
+		          <div class="progress">
+		              Checking login status.</a>
 		          </div>
+          </div>
+          <div id="login" class="progress">
+              Logged in as <span id="email" class="important"></span>. <a href="https://garkbit.prod.cloud.retest.org/logout" target="_blank">Logout</a>
           </div>
           <div id="captureScreenshot" class="progress">
               Capturing screenshot of the whole page.

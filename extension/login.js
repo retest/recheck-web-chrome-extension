@@ -9,9 +9,14 @@ window.addEventListener("load", function(event) {
 		onLoad : 'login-required'
 	}).success(function() {
 		console.log("Sending login info.")
+		var email = null;
+		if (keycloak.idTokenParsed) {
+			email = keycloak.idTokenParsed.email;
+		}
 		chrome.runtime.sendMessage({
 			'message' : 'recheck-web_login',
-			'token' : keycloak.token
+			'token' : keycloak.token,
+			'email' : email
 		});
 		window.close();
 	}).error(function(errorData) {

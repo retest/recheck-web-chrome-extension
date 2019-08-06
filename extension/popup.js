@@ -22,11 +22,9 @@ if (chrome.runtime) {
 	});
 
 	chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-		if (request.message === 'recheck-web_requestLogin') {
-			show('login');
-		}
 		if (request.message === 'recheck-web_login') {
 			show('login');
+			$('email').innerHTML = request.email;
 		}
 		if (request.message === 'recheck-web_captureScreenshot') {
 			show('captureScreenshot');
