@@ -195,14 +195,8 @@ function handleServerResponse(readyState, status, response, name) {
 // requestData
 // send all
 
-chrome.browserAction.onClicked.addListener(function() {
-	if (activeTab) {
-		alert("Capture already in progress, please wait until finished.");
-		return;
-	}
-	// This is so if anything happens, at some point we get reset
-	window.clearTimeout(emergencyReset);
-	emergencyReset = setTimeout(function(){abort(); }, 600000);
+
+function recheck(){
 	chrome.windows.getCurrent({}, function(window) {
 		activeWindowId = window.id;
 		// persist tabId of activeTab
@@ -232,6 +226,17 @@ chrome.browserAction.onClicked.addListener(function() {
 			file : 'content.js'
 		});
 	});
+}
+
+chrome.browserAction.onClicked.addListener(function() {
+	if (activeTab) {
+		alert("Capture already in progress, please wait until finished.");
+		return;
+	}
+	// This is so if anything happens, at some point we get reset
+	window.clearTimeout(emergencyReset);
+	emergencyReset = setTimeout(function(){abort(); }, 600000);
+	recheck();
 });
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
