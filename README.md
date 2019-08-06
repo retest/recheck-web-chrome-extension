@@ -4,9 +4,7 @@ A Chrome extension that uses [recheck-web](https://github.com/retest/recheck-web
 Using recheck-web together with the [recheck.cli](https://github.com/retest/recheck.cli) or the [review GUI](https://retest.de/review/), you can now easily find differences in websites. 
 Using filters, you can easily differentiate between style, positioning or content differences—-you can even define your own category!
 
-![ScreenShot1](https://user-images.githubusercontent.com/1871610/61964086-650cb980-afcd-11e9-983c-21e415473afd.png)
-
-![Screenshot2](https://user-images.githubusercontent.com/1871610/61964130-7a81e380-afcd-11e9-9db2-e84446bc7a45.png)
+<p align="center"><a href="https://www.youtube.com/watch?v=CtbHaS0GRhU"><img src="https://user-images.githubusercontent.com/1871610/62523519-39db6300-b834-11e9-9661-41e142dcfdbf.gif" /></a></p>
 
 ## To Install
 
