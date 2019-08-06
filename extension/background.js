@@ -108,7 +108,7 @@ function sanitize(input) {
 function sendData(request, dataUrl, token) {
 	var checkName = sanitize(request.title);
 	console.log("Requesting user input for " + checkName);
-	var name = prompt('Please enter the name of the check: ', checkName);
+	var name = prompt('Please enter the name of the check. \n\nEither a Golden Master (=baseline/snapshot) with this name is created, or the page is compared to the Golden Master with this name, if it already exists: ', checkName);
 	if (name == null || name == '') {
 		abort(null);
 		return;
