@@ -185,7 +185,8 @@ function handleServerResponse(readyState, status, response, name) {
 			alert('Error interacting with the retest server. \n\nPlease refresh this page and try again. If it still does not work, please contact support: support@retest.de');
 		} else {
 			console.log("Server responded with status " + status + ", response: " + response);
-			alert('Server responded with status: ' + status);
+			alert('Error interacting with the retest server (status' + status + '):\n\n' + response
+					+ '\n\nPlease refresh this page and try again. If it still does not work, please contact support: support@retest.de');
 		}
 	}
 }
