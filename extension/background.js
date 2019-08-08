@@ -186,6 +186,9 @@ function handleServerResponse(readyState, status, response, name) {
 		if (status == 200) {
 			if (response === RESPONSE_GOLDEN_MASTER_CREATED) {
 				alert('Created Golden Master "' + name + '".');
+			} else if (response == 0) {
+				console.log("Server responded with status " + status + ", response: " + response);
+				alert(ERROR_MSG_TOO_LARGE);
 			} else if (response === RESPONSE_REPORT_CREATED) {
 				if (!reportTab) {
 					openReports();
