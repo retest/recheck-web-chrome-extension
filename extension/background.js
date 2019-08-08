@@ -225,14 +225,6 @@ function handleServerResponse(readyState, status, response, name) {
 	}
 }
 
-// when clicked
-// requestLogin
-// when login
-// requestScreenshots
-// requestData
-// send all
-
-
 function recheck(){
 	chrome.windows.getCurrent({}, function(window) {
 		activeWindowId = window.id;
