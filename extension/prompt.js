@@ -73,8 +73,12 @@ function loadExistingGoldenMasters(existing) {
 		select.removeChild(select.firstChild);
 	}
 	appendOption(select, '');
-	for (var i = 0; i < existing.length; i++) {
-		appendOption(select, existing[i]);
+	if (existing) {
+		for (var i = 0; i < existing.length; i++) {
+			appendOption(select, existing[i]);
+		}
+	} else {
+		log.error("No existing Golden Masters received!");
 	}
 }
 
