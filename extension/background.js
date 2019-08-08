@@ -1,6 +1,7 @@
 // background.js
 
 const MAPPING_SERVICE_URL = 'https://babelfish.prod.cloud.retest.org/api/v1.3.0/paths-webdata-mapping';
+const GOLDEN_MASTER_SERVICE_URL = 'http://babelfish.prod.cloud.retest.org/api/v1.3.0/existing-golden-masters';
 const REPORT_DASHBOARD_URL = 'https://garkbit.prod.cloud.retest.org/dashboard';
 const RESPONSE_GOLDEN_MASTER_CREATED = 'recheck-web-Golden-Master-created';
 const RESPONSE_REPORT_CREATED = 'recheck-web-Report-created';
@@ -14,7 +15,9 @@ var dataUrls = [];
 var dataUrlsLength;
 var reportTab;
 var token;
+var existingGoldenMasterNames;
 var emergencyReset;
+var data;
 
 function errorHandler(reason) {
 	console.log(reason);
@@ -53,6 +56,22 @@ function ensureValidUrl(url) {
 	return true;
 }
 
+function requestExistingGoldenMasterNames(token) {
+	var xhr = new XMLHttpRequest();
+	xhr.open('GET', GOLDEN_MASTER_SERVICE_URL, true);
+	xhr.setRequestHeader('Content-Type', 'application/json');
+	xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+	xhr.onreadystatechange = function() {
+		if (xhr.readyState === 4) {
+			if (xhr.status == 200) {
+				existingGoldenMasterNames = JSON.parse(xhr.response);
+			}
+		}
+	}
+	console.log("Requesting existing Golden Master names at " + GOLDEN_MASTER_SERVICE_URL);
+	xhr.send('Requesting all existing Golden Master names.');
+}
+
 function requestScreenshots() {
 	console.log("Requesting screenshots.");
 	chrome.runtime.sendMessage({
@@ -80,10 +99,11 @@ function requestData() {
 	chrome.tabs.sendMessage(activeTabId, {
 		'message' : 'recheck-web_clicked'
 	}, function(response) {
-		sendData(response, dataUrls, token);
+		data = response;
+		requestGoldenMasterName(response.title);
 	});
 	chrome.runtime.sendMessage({
-		'message' : 'recheck-web_requestCheckName'
+		'message' : 'recheck-web_requestGoldenMasterName'
 	});
 }
 
@@ -105,15 +125,24 @@ function sanitize(input) {
 	return input.replace(/\W/g, ' ').replace(/\s\s+/g, ' ').trim();
 }
 
-function sendData(request, dataUrl, token) {
-	var checkName = sanitize(request.title);
+function requestGoldenMasterName(title) {
+	var w = 700;
+	var h = 370;
+	var checkName = sanitize(title);
 	console.log("Requesting user input for " + checkName);
-	var name = prompt('Please enter the name of the check. \n\nEither a Golden Master (=baseline/snapshot) with this name is created, or the page is compared to the Golden Master with this name, if it already exists: ', checkName);
-	if (name == null || name == '') {
-		abort(null);
-		return;
-	}
+    var left = ((data.screenWidth - w) / 2) + data.dualScreenLeft;
+    var top = ((data.screenHeight - h) / 2) + data.dualScreenTop;
+	chrome.windows.create({
+		'url' : 'prompt.html',
+		'type' : 'popup',
+		'top' : top,
+		'left' : left,
+		'width' : w,
+		'height' : h
+	});
+}
 
+function sendData(name, action) {
 	var xhr = new XMLHttpRequest();
 	xhr.open('POST', MAPPING_SERVICE_URL, true);
 	xhr.setRequestHeader('Content-Type', 'application/json');
@@ -126,15 +155,16 @@ function sendData(request, dataUrl, token) {
 		'message' : 'recheck-web_sendData'
 	});
 	xhr.send(JSON.stringify({
-		'allElements' : JSON.parse(request.allElements),
-		'screenshots' : dataUrl,
+		'allElements' : JSON.parse(data.allElements),
+		'screenshots' : dataUrls,
 		'name' : sanitize(name),
-		'title' : sanitize(request.title),
-		'url' : request.url,
-		'os' : request.os,
-		'browser' : request.browser,
-		'screenWidth' : request.screenWidth,
-		'screenHeight' : request.screenHeight
+		'action' : action,
+		'title' : sanitize(data.title),
+		'url' : data.url,
+		'os' : data.os,
+		'browser' : data.browser,
+		'screenWidth' : data.screenWidth,
+		'screenHeight' : data.screenHeight
 	}));
 	chrome.runtime.sendMessage({
 		'message' : 'recheck-web_processing'
@@ -150,8 +180,8 @@ function openReports() {
 }
 
 function handleServerResponse(readyState, status, response, name) {
-	abort(null);
 	if (readyState === 4) {
+		abort(null);
 		if (status == 200) {
 			if (response === RESPONSE_GOLDEN_MASTER_CREATED) {
 				alert('Created Golden Master "' + name + '".');
@@ -185,7 +215,7 @@ function handleServerResponse(readyState, status, response, name) {
 			alert('Error interacting with the retest server. \n\nPlease refresh this page and try again. If it still does not work, please contact support: support@retest.de');
 		} else {
 			console.log("Server responded with status " + status + ", response: " + response);
-			alert('Error interacting with the retest server (status' + status + '):\n\n' + response
+			alert('Error interacting with the retest server (status ' + status + '):\n\n' + response
 					+ '\n\nPlease refresh this page and try again. If it still does not work, please contact support: support@retest.de');
 		}
 	}
@@ -244,6 +274,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 	if (request.message === 'recheck-web_login') {
 		console.log("Receiving login.");
 		token = request.token;
+		requestExistingGoldenMasterNames(token);
 		requestScreenshots();
 		sendResponse();
 	}
@@ -260,5 +291,11 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 	if (request.message === 'recheck-web_aborted') {
 		console.log("Receiving abort.");
 		abort(null);
+	}
+	if (request.message === 'recheck-web_sendExistingGMs') {
+		sendResponse(existingGoldenMasterNames);
+	}
+	if (request.message === 'recheck-web_sendGMName') {
+		sendData(request.name, request.action);
 	}
 });

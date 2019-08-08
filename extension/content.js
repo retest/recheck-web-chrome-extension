@@ -43,6 +43,14 @@ if (!alreadyInjected) {
 			var allElements = mapElement(htmlNode, "//html[1]", {
 				"//html[1]" : html
 			});
+		    // Fixes dual-screen position                         Most browsers      Firefox
+		    var dualScreenLeft = window.screenLeft != undefined ? window.screenLeft : window.screenX;
+		    var dualScreenTop = window.screenTop != undefined ? window.screenTop : window.screenY;
+
+		    var windowWidth = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
+		    var windowHeight = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
+
+		    var systemZoom = windowWidth / window.screen.availWidth;
 			sendResponse({
 				'message' : 'recheck-web_send_data',
 				'allElements' : JSON.stringify(allElements),
@@ -51,7 +59,12 @@ if (!alreadyInjected) {
 				'os' : getOs(),
 				'browser' : getBrowser(),
 				'screenWidth' : screen.width,
-				'screenHeight' : screen.height
+				'screenHeight' : screen.height,
+				'dualScreenLeft' : dualScreenLeft,
+				'dualScreenTop' : dualScreenTop,
+				'windowWidth' : windowWidth,
+				'windowHeight' : windowHeight,
+				'systemZoom' : systemZoom
 			});
 		}
 		if (request.message === 'recheck-web_resize_img') {
