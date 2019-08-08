@@ -34,6 +34,11 @@ function cancelClicked() {
 function compareGoldenMasterClicked() {
 	var existing = $('compareName');
 	var selected = existing.options[existing.selectedIndex].value;
+	if (!selected || selected === '') {
+		$('compareName').classList.add('warn');
+		$('compareName').title = 'Please select the name of the Golden Master to compare the current page with.';
+		return;
+	}
 	if (chrome && chrome.runtime) {
 		chrome.runtime.sendMessage({
 			'message' : 'recheck-web_sendGMName',
@@ -43,6 +48,11 @@ function compareGoldenMasterClicked() {
 	}
 	window.removeEventListener('beforeunload', cancelClicked);
 	window.close();
+}
+
+function cleanCompareWarning() {
+	$('compareName').classList.remove('warn');
+	$('compareName').title = '';
 }
 
 function checkGoldenMasterExists() {
@@ -98,6 +108,7 @@ window.addEventListener('load', function(event) {
 	$('cancel').addEventListener('click', cancelClicked);
 	$('compare').addEventListener('click', compareGoldenMasterClicked);
 	$('createName').addEventListener('input', checkGoldenMasterExists);
+	$('compareName').addEventListener('change', cleanCompareWarning);
 	if (chrome && chrome.runtime) {
 		chrome.runtime.sendMessage({
 			'message' : 'recheck-web_sendExistingGMs'
