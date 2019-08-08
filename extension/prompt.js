@@ -86,7 +86,7 @@ function loadExistingGoldenMasters(existing) {
 			appendOption(select, existing[i]);
 		}
 	} else {
-		log.error("No existing Golden Masters received!");
+		console.error("No existing Golden Masters received!");
 	}
 }
 
