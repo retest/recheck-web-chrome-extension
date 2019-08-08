@@ -174,8 +174,8 @@ function openReports() {
 }
 
 function handleServerResponse(readyState, status, response, name) {
-	abort(null);
 	if (readyState === 4) {
+		abort(null);
 		if (status == 200) {
 			if (response === RESPONSE_GOLDEN_MASTER_CREATED) {
 				alert('Created Golden Master "' + name + '".');

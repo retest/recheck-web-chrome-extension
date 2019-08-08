@@ -12,6 +12,7 @@ function createGoldenMasterClicked() {
 			'action' : 'create-overwrite'
 		});
 	}
+	window.removeEventListener('beforeunload', cancelClicked);
 	window.close();
 }
 
@@ -34,6 +35,7 @@ function compareGoldenMasterClicked() {
 			'action' : 'compare'
 		});
 	}
+	window.removeEventListener('beforeunload', cancelClicked);
 	window.close();
 }
 
