@@ -1,7 +1,7 @@
 // background.js
 
 const MAPPING_SERVICE_URL = 'https://babelfish.prod.cloud.retest.org/api/v1.3.0/paths-webdata-mapping';
-const GOLDEN_MASTER_SERVICE_URL = 'http://babelfish.prod.cloud.retest.org/api/v1.3.0/existing-golden-masters';
+const GOLDEN_MASTER_SERVICE_URL = 'https://babelfish.prod.cloud.retest.org/api/v1.3.0/existing-golden-masters';
 const REPORT_DASHBOARD_URL = 'https://garkbit.prod.cloud.retest.org/dashboard';
 const RESPONSE_GOLDEN_MASTER_CREATED = 'recheck-web-Golden-Master-created';
 const RESPONSE_REPORT_CREATED = 'recheck-web-Report-created';
