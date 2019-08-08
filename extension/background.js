@@ -126,13 +126,19 @@ function sanitize(input) {
 }
 
 function requestGoldenMasterName(title) {
+	var w = 700;
+	var h = 370;
 	var checkName = sanitize(title);
 	console.log("Requesting user input for " + checkName);
+    var left = ((data.screenWidth - w) / 2) + data.dualScreenLeft;
+    var top = ((data.screenHeight - h) / 2) + data.dualScreenTop;
 	chrome.windows.create({
 		'url' : 'prompt.html',
 		'type' : 'popup',
-		'width' : 800,
-		'height' : 400
+		'top' : top,
+		'left' : left,
+		'width' : w,
+		'height' : h
 	});
 }
 
