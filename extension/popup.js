@@ -32,8 +32,8 @@ if (chrome.runtime) {
 		if (request.message === 'recheck-web_captureData') {
 			show('captureData');
 		}
-		if (request.message === 'recheck-web_requestCheckName') {
-			show('requestCheckName');
+		if (request.message === 'recheck-web_requestGoldenMasterName') {
+			show('requestGoldenMasterName');
 		}
 		if (request.message === 'recheck-web_sendData') {
 			show('sendData');

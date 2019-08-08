@@ -83,7 +83,7 @@ function requestData() {
 		sendData(response, dataUrls, token);
 	});
 	chrome.runtime.sendMessage({
-		'message' : 'recheck-web_requestCheckName'
+		'message' : 'recheck-web_requestGoldenMasterName'
 	});
 }
 
