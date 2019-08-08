@@ -74,7 +74,8 @@ function appendOption(select, text) {
 	select.appendChild(option);
 }
 
-function loadExistingGoldenMasters(existing) {
+function loadExistingGoldenMasters(response) {
+	var existing = response.existing;
 	var select = $('compareName');
 	// clear all
 	while (select.firstChild) {
@@ -88,6 +89,8 @@ function loadExistingGoldenMasters(existing) {
 	} else {
 		console.error("No existing Golden Masters received!");
 	}
+	$('createName').value = response.title;
+	checkGoldenMasterExists();
 }
 
 window.addEventListener('load', function(event) {

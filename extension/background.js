@@ -293,7 +293,10 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 		abort(null);
 	}
 	if (request.message === 'recheck-web_sendExistingGMs') {
-		sendResponse(existingGoldenMasterNames);
+		sendResponse({
+			'existing' :existingGoldenMasterNames,
+			'title' : sanitize(data.title)
+		});
 	}
 	if (request.message === 'recheck-web_sendGMName') {
 		sendData(request.name, request.action);
