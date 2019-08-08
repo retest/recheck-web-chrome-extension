@@ -5,10 +5,16 @@ function $(id) {
 }
 
 function createGoldenMasterClicked() {
+	var name = $('createName').value;
+	if (!name || name === '') {
+		$('createName').classList.add('warn');
+		$('createName').title = 'Please enter the name for the Golden Master to be created.';
+		return;
+	}
 	if (chrome && chrome.runtime) {
 		chrome.runtime.sendMessage({
 			'message' : 'recheck-web_sendGMName',
-			'name' : $('createName').value,
+			'name' : name,
 			'action' : 'create-overwrite'
 		});
 	}
@@ -43,14 +49,16 @@ function checkGoldenMasterExists() {
 	var existing = $('compareName');
 	var textField = $('createName');
 	var button = $('create');
-	for (i = 0; i < existing.length; ++i) {
-		if (existing.options[i].value === textField.value) {
-			existing.selectedIndex = i;
-			button.innerHTML = 'Overwrite Existing';
-			button.title = 'Will overwrite the existing Golden Master with that name!';
-			textField.classList.add('warn');
-			textField.title = 'Will overwrite the existing Golden Master with that name!';
-			return;
+	if (textField.value != '') {
+		for (i = 0; i < existing.length; ++i) {
+			if (existing.options[i].value === textField.value) {
+				existing.selectedIndex = i;
+				button.innerHTML = 'Overwrite Existing';
+				button.title = 'Will overwrite the existing Golden Master with that name!';
+				textField.classList.add('warn');
+				textField.title = 'Will overwrite the existing Golden Master with that name!';
+				return;
+			}
 		}
 	}
 	button.innerHTML = 'Create';
