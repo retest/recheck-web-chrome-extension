@@ -193,8 +193,8 @@ function handleServerResponse(readyState, status, response, name) {
 				if (!reportTab) {
 					openReports();
 				} else {
-					chrome.tabs.get(reportTab.id, function callback() {
-						if (chrome.runtime.lastError || reportTab.href != REPORT_DASHBOARD_URL) {
+					chrome.tabs.get(reportTab.id, function callback(tab) {
+						if (chrome.runtime.lastError || tab.url != REPORT_DASHBOARD_URL) {
 							reportTab = null;
 							openReports();
 						} else {
