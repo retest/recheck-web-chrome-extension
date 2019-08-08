@@ -2,7 +2,7 @@ Save time and effort when testing your highly dynamic and interactive web pages.
 
 When clicking the button, it will send all of the website data to retest (https://retest.de/), where it will be either stored as Golden Master (=snapshot/base-line) for later comparison or compared to an existing Golden Master and the differences be highlighted. 
 
-You can use either the review GUI or the open source recheck.cli to see the differences report. You can also filter out the differences you don't care about and quickly find relevant changes. This gives you unprecedented power: ignore font changes but not the text. Or ignore content but not CSS. Define your own filters with a simple git-like syntax.
+You can use either the review GUI or the open source recheck.cli to open the differences report. You can also filter out the differences you don't care about and quickly find relevant changes. This gives you unprecedented power: ignore font changes but not the text. Or ignore content but not CSS. Define your own filters with a simple git-like syntax.
 
 While being a very helpful tool on it's own, this is also a convenient demo to show the power of the test automation tool recheck-web. recheck-web is an open source product at https://github.com/retest/recheck-web. 
 
