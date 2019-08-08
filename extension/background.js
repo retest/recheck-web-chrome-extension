@@ -16,6 +16,8 @@ var dataUrls = [];
 var dataUrlsLength;
 var reportTab;
 var token;
+var email;
+var refreshRequired;
 var existingGoldenMasterNames;
 var emergencyReset;
 var data;
@@ -109,6 +111,10 @@ function requestData() {
 }
 
 function requestLogin() {
+	if (token) {
+		notifyLogin(token, email);
+		return;
+	}
 	chrome.runtime.sendMessage({
 		'message' : 'recheck-web_requestLogin'
 	});
@@ -208,6 +214,12 @@ function handleServerResponse(readyState, status, response, name) {
 				alert('Error interacting with the retest server:\n\n' + response
 						+ '\n\nPlease refresh this page and try again. If it still does not work, please contact support: support@retest.de');
 			}
+		} else if (status == 401) {
+			console.log("Server responded with status " + status);
+			token = null;
+			email = null;
+			window.clearTimeout(refreshRequired);
+			alert('Your login was invalidated, please try again and login.\nIf the problem persists, please contact support: support@retest.de');
 		} else if (status == 403) {
 			console.log("Server responded with status " + status);
 			alert('Something is wrong with your access rights.\nPlease contact support: support@retest.de');
@@ -266,12 +278,22 @@ chrome.browserAction.onClicked.addListener(function() {
 	recheck();
 });
 
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+function notifyLogin() {
+	console.log("Receiving login.");
+	chrome.runtime.sendMessage({
+		'message' : 'recheck-web_loginSuccess',
+		'email' : email
+	});
+	requestExistingGoldenMasterNames(token);
+	requestScreenshots();
+}
+
+function msgListener(request, sender, sendResponse) {
 	if (request.message === 'recheck-web_login') {
-		console.log("Receiving login.");
 		token = request.token;
-		requestExistingGoldenMasterNames(token);
-		requestScreenshots();
+		email = request.email;
+		refreshRequired = setTimeout(function(){token = null; email = null;}, 300000);
+		notifyLogin();
 		sendResponse();
 	}
 	if (request.message === 'recheck-web_resize_img') {
@@ -297,4 +319,11 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 	if (request.message === 'recheck-web_sendGMName') {
 		sendData(request.name, request.action);
 	}
-});
+	if (request.message === 'recheck-web_popupOpened') {
+		sendResponse({
+			'email' : email
+		});
+	}
+}
+
+chrome.runtime.onMessage.addListener(msgListener);

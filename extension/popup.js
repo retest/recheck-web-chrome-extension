@@ -19,10 +19,15 @@ window.addEventListener("beforeunload", function(event) {
 if (chrome.runtime) {
 	chrome.runtime.sendMessage({
 		'message' : 'recheck-web_popupOpened'
+	}, function(response) {
+		if (response.email) {
+			show('login');
+			$('email').innerHTML = response.email;
+		}
 	});
 
 	chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-		if (request.message === 'recheck-web_login') {
+		if (request.message === 'recheck-web_loginSuccess') {
 			show('login');
 			$('email').innerHTML = request.email;
 		}
