@@ -7,6 +7,7 @@ const RESPONSE_GOLDEN_MASTER_CREATED = 'recheck-web-Golden-Master-created';
 const RESPONSE_REPORT_CREATED = 'recheck-web-Report-created';
 
 const ERROR_MSG = 'There was an error in the recheck plugin. Please refresh this page and try again.\n\nIf it still does not work, please consider reporting a bug at\nhttps://github.com/retest/recheck-web-chrome-extension/issues\n\nThank you!';
+const ERROR_MSG_TOO_LARGE = 'Website is too large for demo.\n\nChecking large sites incurrs significant traffic, processing and storage costs. Since this is only a demo, we therefore limited the size of websites that you can check.\n\nTo check larger sites, please use the full version or contact us.';
 
 var activeWindowId;
 var activeTab;
@@ -185,12 +186,15 @@ function handleServerResponse(readyState, status, response, name) {
 		if (status == 200) {
 			if (response === RESPONSE_GOLDEN_MASTER_CREATED) {
 				alert('Created Golden Master "' + name + '".');
+			} else if (response == 0) {
+				console.log("Server responded with status " + status + ", response: " + response);
+				alert(ERROR_MSG_TOO_LARGE);
 			} else if (response === RESPONSE_REPORT_CREATED) {
 				if (!reportTab) {
 					openReports();
 				} else {
-					chrome.tabs.get(reportTab.id, function callback() {
-						if (chrome.runtime.lastError || reportTab.href != REPORT_DASHBOARD_URL) {
+					chrome.tabs.get(reportTab.id, function callback(tab) {
+						if (chrome.runtime.lastError || tab.url != REPORT_DASHBOARD_URL) {
 							reportTab = null;
 							openReports();
 						} else {
@@ -209,7 +213,7 @@ function handleServerResponse(readyState, status, response, name) {
 			alert('Something is wrong with your access rights.\nPlease contact support: support@retest.de');
 		} else if (status == 413) {
 			console.log("Server responded with status " + status);
-			alert('Website is too large for demo.\n\nChecking large sites incurrs significant traffic, processing and storage costs. Since this is only a demo, we therefore limited the size of websites that you can check.\n\nTo check larger sites, please use the full version or contact us.');
+			alert(ERROR_MSG_TOO_LARGE);
 		} else if (status >= 500 && status < 600) {
 			console.log("Server responded with status " + status + ", response: " + response);
 			alert('Error interacting with the retest server. \n\nPlease refresh this page and try again. If it still does not work, please contact support: support@retest.de');
@@ -220,14 +224,6 @@ function handleServerResponse(readyState, status, response, name) {
 		}
 	}
 }
-
-// when clicked
-// requestLogin
-// when login
-// requestScreenshots
-// requestData
-// send all
-
 
 function recheck(){
 	chrome.windows.getCurrent({}, function(window) {

