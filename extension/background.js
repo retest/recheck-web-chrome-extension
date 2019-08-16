@@ -127,8 +127,8 @@ function sanitize(input) {
 }
 
 function requestGoldenMasterName(title) {
-	var w = 700;
-	var h = 370;
+	var w = 800;
+	var h = 450;
 	var checkName = sanitize(title);
 	console.log("Requesting user input for " + checkName);
     var left = ((data.screenWidth - w) / 2) + data.dualScreenLeft;
