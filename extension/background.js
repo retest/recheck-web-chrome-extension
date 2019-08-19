@@ -127,8 +127,8 @@ function requestGoldenMasterName(title) {
 	var h = 450;
 	var checkName = sanitize(title);
 	console.log("Requesting user input for " + checkName);
-    var left = ((data.screenWidth - w) / 2) + data.dualScreenLeft;
-    var top = ((data.screenHeight - h) / 2) + data.dualScreenTop;
+    var left = Math.round(((data.screenWidth - w) / 2) + data.dualScreenLeft);
+    var top = Math.round(((data.screenHeight - h) / 2) + data.dualScreenTop);
 	chrome.windows.create({
 		'url' : 'prompt.html',
 		'type' : 'popup',
