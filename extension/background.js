@@ -46,17 +46,6 @@ function abort(msg) {
 	return;
 }
 
-function ensureValidUrl(url) {
-	if (url.startsWith("file://")) {
-		chrome.extension.isAllowedFileSchemeAccess(function () {
-			if (chrome.runtime.lastError) {
-				abort("Local file access disabled.\n\nPlease go to the extension configuration (chrome://extensions/) and enable \"Allow access to file URLs\" for this extension.");
-			}
-		});
-	}
-	return true;
-}
-
 function requestExistingGoldenMasterNames(token) {
 	var xhr = new XMLHttpRequest();
 	xhr.open('GET', GOLDEN_MASTER_SERVICE_URL, true);
@@ -80,8 +69,15 @@ function requestScreenshots() {
 	});
 	CaptureAPI.captureToDataUrls(activeTab, function(dataUrlsInput) {
 		if (dataUrlsInput.length === 0) {
-			console.error("No screenshots received, aborting...");
-			abort(ERROR_MSG);
+		    if (chrome.runtime.lastError && activeTab.url.startsWith("file://")) {
+				abort("Local file access disabled.\n\nPlease go to the extension configuration (chrome://extensions/) and enable \"Allow access to file URLs\" for this extension.");
+			} else if (!activeTab.url || activeTab.url === '' || activeTab.url.startsWith('chrome://') || activeTab.url.startsWith('https://chrome.google.com/')) {
+		    	abort("Chrome disallows extensions access to certain URLs. This is one of them. Please visit another website and try again.");
+		    } else {
+		    	console.error("No screenshots received, aborting...");
+		    	abort(ERROR_MSG);
+		    }
+		    return;
 		}
 		dataUrlsLength = dataUrlsInput.length;
 		console.log("Received " + dataUrlsLength + " screenshots, now requesting resize.");
@@ -227,6 +223,9 @@ function handleServerResponse(readyState, status, response, name) {
 
 function recheck(){
 	chrome.windows.getCurrent({}, function(window) {
+		if (chrome.runtime.lastError){
+			console.error(chrome.runtime.lastError.message);
+		}
 		activeWindowId = window.id;
 		// persist tabId of activeTab
 		chrome.tabs.query({
@@ -235,9 +234,6 @@ function recheck(){
 		}, function(tabs) {
 			activeTab = tabs[0];
 			activeTabId = activeTab.id;
-			if (!ensureValidUrl(activeTab.url)) {
-				return;
-			}
 			chrome.windows.create({
 				'url' : 'popup.html',
 				'type' : 'popup',
