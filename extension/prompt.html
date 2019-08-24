@@ -46,12 +46,12 @@ a:active { color: #000; }
     color: #082749;
 }
 
-#compareForm {
+#createForm {
 		margin-top: 5px;
 		margin-bottom: 80px;
 }
 
-#createForm {
+#compareForm {
 		margin-top: 5px;
 }
 
@@ -133,22 +133,22 @@ p {
             <img id="recce" src="recce-writing.png" />
           </div>
           <div class="msg">
+	            <div>
+                  Enter the name of the Golden Master to be created:
+	            </div>
+							<div id="createForm">              
+	              <input id="createName" type="text" />
+	              <button type="button" id="create" class="btnOk">Create</button>
+	            </div>
               <div>
-                  Select the Golden Master to compare this web site against: 
+                  Or select the Golden Master to compare this web site against: 
               </div>
 							<div id="compareForm">              
 						    <select id="compareName" size="1">
 						      <option></option>
 						    </select>
 						    <button type="button" id="compare" class="btnOk">Compare</button>
-	            </div>
-	            <div>
-                  Or enter the name of the Golden Master to be created:
-	            </div>
-							<div id="createForm">              
-	              <input id="createName" type="text" />
-	              <button type="button" id="create" class="btnOk">Create</button>
-	              <button type="button" id="cancel">Cancel</button>
+						    <button type="button" id="cancel">Cancel</button>
 	            </div>
           </div>
       </div>
