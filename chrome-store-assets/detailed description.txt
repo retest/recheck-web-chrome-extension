@@ -1,6 +1,6 @@
-Save time and effort when testing your highly dynamic and interactive web pages. This Chrome extension will show you all differences in a web page. Whether you have to play "spot the difference" or are overwhelmed by changes: Our powerful filter mechanism will allow you to quickly find the ones that are relevant for you.
+Save time and effort when testing your web pages: this Chrome extension will show you all website differences. Whether you have to play "spot the difference" or are overwhelmed by changes: Our powerful filter mechanism allows you to quickly find the website changes that are relevant for you. To get a quick tutorial, go to https://retest.de/recheck-web-chrome-extension/
 
-When clicking the button, it will send all of the website data to retest (https://retest.de/), where it will be either stored as Golden Master (=snapshot/base-line) for later comparison or compared to an existing Golden Master and the differences be highlighted. 
+When clicking the button, this extension will send all of the website data to retest (https://retest.de/), where it will be either stored as Golden Master (=snapshot/base-line) for later comparison or compared to an existing Golden Master and the differences be highlighted. 
 
 You can use either the review GUI or the open source recheck.cli to open the differences report. You can also filter out the differences you don't care about and quickly find relevant changes. This gives you unprecedented power: ignore font changes but not the text. Or ignore content but not CSS. Define your own filters with a simple git-like syntax.
 
