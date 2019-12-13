@@ -127,8 +127,8 @@ function requestGoldenMasterName(title) {
 	var h = 450;
 	var checkName = sanitize(title);
 	console.log("Requesting user input for " + checkName);
-    var left = Math.round(((data.screenWidth - w) / 2) + data.dualScreenLeft);
-    var top = Math.round(((data.screenHeight - h) / 2) + data.dualScreenTop);
+    var left = Math.round(((data.windowWidth - w) / 2) + data.dualScreenLeft);
+    var top = Math.round(((data.windowHeight - h) / 2) + data.dualScreenTop);
 	chrome.windows.create({
 		'url' : 'prompt.html',
 		'type' : 'popup',
@@ -160,8 +160,8 @@ function sendData(name, action) {
 		'url' : data.url,
 		'os' : data.os,
 		'browser' : data.browser,
-		'window.width' : data.screenWidth,
-		'window.height' : data.screenHeight
+		'window.width' : data.windowWidth,
+		'window.height' : data.windowHeight
 	}));
 	chrome.runtime.sendMessage({
 		'message' : 'recheck-web_processing'
