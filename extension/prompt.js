@@ -18,11 +18,11 @@ function createGoldenMasterClicked() {
 			'action' : 'create-overwrite'
 		});
 	}
-	window.removeEventListener('beforeunload', cancelClicked);
+	window.removeEventListener('beforeunload', cancel);
 	window.close();
 }
 
-function cancelClicked() {
+function cancel() {
 	if (chrome && chrome.runtime) {
 		chrome.runtime.sendMessage({
 			'message' : 'recheck-web_aborted'
@@ -46,7 +46,7 @@ function compareGoldenMasterClicked() {
 			'action' : 'compare'
 		});
 	}
-	window.removeEventListener('beforeunload', cancelClicked);
+	window.removeEventListener('beforeunload', cancel);
 	window.close();
 }
 
@@ -105,7 +105,6 @@ function loadExistingGoldenMasters(response) {
 
 window.addEventListener('load', function(event) {
 	$('create').addEventListener('click', createGoldenMasterClicked);
-	$('cancel').addEventListener('click', cancelClicked);
 	$('compare').addEventListener('click', compareGoldenMasterClicked);
 	$('createName').addEventListener('input', checkGoldenMasterExists);
 	$('compareName').addEventListener('change', cleanCompareWarning);
@@ -116,7 +115,7 @@ window.addEventListener('load', function(event) {
 	}
 });
 
-window.addEventListener('beforeunload', cancelClicked);
+window.addEventListener('beforeunload', cancel);
 
 if (chrome.runtime) {
 	chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
