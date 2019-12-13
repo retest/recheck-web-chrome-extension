@@ -160,8 +160,8 @@ function sendData(name, action) {
 		'url' : data.url,
 		'os' : data.os,
 		'browser' : data.browser,
-		'screenWidth' : data.screenWidth,
-		'screenHeight' : data.screenHeight
+		'window.width' : data.screenWidth,
+		'window.height' : data.screenHeight
 	}));
 	chrome.runtime.sendMessage({
 		'message' : 'recheck-web_processing'
