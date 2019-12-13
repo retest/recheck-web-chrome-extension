@@ -48,8 +48,7 @@ if (!alreadyInjected) {
 		    var dualScreenTop = window.screenTop != undefined ? window.screenTop : window.screenY;
 
 		    var windowWidth = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
-		    var windowHeight = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
-
+		    
 		    var systemZoom = windowWidth / window.screen.availWidth;
 			sendResponse({
 				'message' : 'recheck-web_send_data',
@@ -58,12 +57,10 @@ if (!alreadyInjected) {
 				'url' : window.location.href,
 				'os' : getOs(),
 				'browser' : getBrowser(),
-				'screenWidth' : screen.width,
-				'screenHeight' : screen.height,
 				'dualScreenLeft' : dualScreenLeft,
 				'dualScreenTop' : dualScreenTop,
-				'windowWidth' : windowWidth,
-				'windowHeight' : windowHeight,
+				'windowWidth' : screen.width,
+				'windowHeight' : screen.height,
 				'systemZoom' : systemZoom
 			});
 		}
