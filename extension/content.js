@@ -6,14 +6,6 @@ if (!alreadyInjected) {
 
 	var WANTED_WIDTH = 800;
 
-	function getOs() {
-		return navigator.oscpu;
-	}
-
-	function getBrowser() {
-		return navigator.vendor + ' ' + navigator.vendorSub;
-	}
-
 	function resizeDataUrl(dataUrl) {
 		var img = document.createElement('img');
 
@@ -55,8 +47,10 @@ if (!alreadyInjected) {
 				'allElements' : JSON.stringify(allElements),
 				'title' : document.title,
 				'url' : window.location.href,
-				'os' : getOs(),
-				'browser' : getBrowser(),
+				'osName' : navigator.platform,
+				'osVersion' : navigator.oscpu,
+				'browserName' : navigator.appName,
+				'browserVersion' : navigator.appVersion,
 				'dualScreenLeft' : dualScreenLeft,
 				'dualScreenTop' : dualScreenTop,
 				'windowWidth' : screen.width,
