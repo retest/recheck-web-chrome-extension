@@ -63,7 +63,7 @@ function checkGoldenMasterExists() {
 		for (i = 0; i < existing.length; ++i) {
 			if (existing.options[i].value === textField.value) {
 				existing.selectedIndex = i;
-				button.innerHTML = 'Overwrite Existing';
+				button.innerHTML = 'Overwrite';
 				button.title = 'Will overwrite the existing Golden Master with that name!';
 				textField.classList.add('warn');
 				textField.title = 'Will overwrite the existing Golden Master with that name!';
