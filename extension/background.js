@@ -158,8 +158,10 @@ function sendData(name, action) {
 		'action' : action,
 		'title' : sanitize(data.title),
 		'url' : data.url,
-		'os' : data.os,
-		'browser' : data.browser,
+		'os.name' : data.osName,
+		'os.version' : data.osVersion,
+		'browser.name' : data.browserName,
+		'browser.version' : data.browserVersion,
 		'window.width' : data.windowWidth,
 		'window.height' : data.windowHeight
 	}));
