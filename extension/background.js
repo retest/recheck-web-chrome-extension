@@ -15,10 +15,12 @@ var activeTabId;
 var dataUrls = [];
 var dataUrlsLength;
 var reportTab;
+var title;
 var token;
 var existingGoldenMasterNames;
 var emergencyReset;
 var data;
+var frameData = [];
 
 function errorHandler(reason) {
 	console.log(reason);
@@ -84,7 +86,7 @@ function requestScreenshots() {
 		chrome.tabs.sendMessage(activeTabId, {
 			'message' : 'recheck-web_resize_img',
 			'dataUrls' : dataUrlsInput
-		});
+		}, {'frameId' : 0});
 	}, errorHandler, progress, splitnotifier);
 }
 
@@ -96,8 +98,7 @@ function requestData() {
 	chrome.tabs.sendMessage(activeTabId, {
 		'message' : 'recheck-web_clicked'
 	}, function(response) {
-		data = response;
-		requestGoldenMasterName(response.title);
+		requestGoldenMasterName(response);
 	});
 	chrome.runtime.sendMessage({
 		'message' : 'recheck-web_requestGoldenMasterName'
@@ -122,11 +123,11 @@ function sanitize(input) {
 	return input.replace(/\W/g, ' ').replace(/\s\s+/g, ' ').trim();
 }
 
-function requestGoldenMasterName(title) {
+function requestGoldenMasterName(data) {
 	var w = 800;
 	var h = 450;
-	var checkName = sanitize(title);
-	console.log("Requesting user input for " + checkName);
+	title = sanitize(data.title);
+	console.log("Requesting user input for " + title);
     var left = Math.round(((data.windowWidth - w) / 2) + data.dualScreenLeft);
     var top = Math.round(((data.windowHeight - h) / 2) + data.dualScreenTop);
 	chrome.windows.create({
@@ -152,7 +153,7 @@ function sendData(name, action) {
 		'message' : 'recheck-web_sendData'
 	});
 	xhr.send(JSON.stringify({
-		'allElements' : JSON.parse(data.allElements),
+		'allElements' : data.allElements,
 		'screenshots' : dataUrls,
 		'name' : sanitize(name),
 		'action' : action,
@@ -245,10 +246,12 @@ function recheck(){
 			requestLogin();
 		});
 		chrome.tabs.executeScript(activeTabId, {
-			file : 'getAllElementsByPath.js'
+			file : 'getAllElementsByPath.js',
+			allFrames : true
 		});
 		chrome.tabs.executeScript(activeTabId, {
-			file : 'content.js'
+			file : 'content.js',
+			allFrames : true
 		});
 	});
 }
@@ -263,6 +266,34 @@ chrome.browserAction.onClicked.addListener(function() {
 	emergencyReset = setTimeout(function(){abort(); }, 600000);
 	recheck();
 });
+
+function getFramePrefixWithUrl(allElements, url) {
+	var entries = Object.entries(allElements);
+	// iterate over all elements
+	for (const [path, properties] of entries) {
+		// find iframe or frame with same URL
+		if (properties.tagName == "iframe" || properties.tagName == "frame") {
+			var src = properties.src;
+			while (src.search("../") >= 0 || src.search("./") >= 0) {
+				src = src.replace("../", "");
+				src = src.replace("./", "");
+			}
+			if (url.endsWith(src)) {
+				return path;
+			}
+		} 
+	}
+}
+
+function addToData(request) {
+	var prefix = getFramePrefixWithUrl(data.allElements, request.url);
+	var allNewElements = JSON.parse(request.allElements);
+	var entries = Object.entries(allNewElements);
+	// add all elements with prefix of frame
+	for (const [path, properties] of entries) {
+		data.allElements[prefix + path.replace("//", "/")] = properties; 
+	}
+}
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 	if (request.message === 'recheck-web_login') {
@@ -289,10 +320,27 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 	if (request.message === 'recheck-web_sendExistingGMs') {
 		sendResponse({
 			'existing' :existingGoldenMasterNames,
-			'title' : sanitize(data.title)
+			'title' : title
 		});
 	}
 	if (request.message === 'recheck-web_sendGMName') {
 		sendData(request.name, request.action);
+	}
+	if (request.message === 'recheck-web_send_data') {
+		if (request.toplevel) {
+			console.log("Receiving data from content " + request.url + ".");
+			data = request;
+			data.allElements = JSON.parse(data.allElements);
+			while(frameData.length > 0) {
+				addToData(frameData.pop());
+			}
+		} else {
+			console.log("Receiving second data package from another content " + request.url + ".");
+			if (data == null) {
+				frameData.push(request);
+			} else {
+				addToData(request);
+			}
+		}
 	}
 });
