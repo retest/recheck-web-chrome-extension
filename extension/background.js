@@ -274,15 +274,13 @@ function getFramePrefixWithUrl(allElements, url) {
 		// find iframe or frame with same URL
 		if (properties.tagName == "iframe" || properties.tagName == "frame") {
 			var src = properties.src;
-			while (src.search("../") >= 0 || src.search("./") >= 0) {
-				src = src.replace("../", "");
-				src = src.replace("./", "");
-			}
 			if (url.endsWith(src)) {
 				return path;
 			}
 		} 
 	}
+	console.log("Found no frame prefix with URL " + url);
+	return "";
 }
 
 function addToData(request) {
