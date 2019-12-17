@@ -1,7 +1,7 @@
 // content.js
 
 if (!alreadyInjected) {
-
+	
 	var alreadyInjected = true;
 
 	var WANTED_WIDTH = 800;
@@ -28,13 +28,18 @@ if (!alreadyInjected) {
 		img.src = dataUrl;
 	}
 
+	function isToplevelFrame() {
+	    try {
+	        return window.self === window.top;
+	    } catch (e) {
+	        return false;
+	    }
+	}
+	
 	chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+		console.log("Received " + request.message + " in frame with URL " + document.location.href);
 		if (request.message === 'recheck-web_clicked') {
-			var htmlNode = document.getElementsByTagName("html")[0];
-			var html = transform(htmlNode);
-			var allElements = mapElement(htmlNode, "//html[1]", {
-				"//html[1]" : html
-			});
+			
 		    // Fixes dual-screen position                         Most browsers      Firefox
 		    var dualScreenLeft = window.screenLeft != undefined ? window.screenLeft : window.screenX;
 		    var dualScreenTop = window.screenTop != undefined ? window.screenTop : window.screenY;
@@ -42,11 +47,28 @@ if (!alreadyInjected) {
 		    var windowWidth = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
 		    
 		    var systemZoom = windowWidth / window.screen.availWidth;
+			
 			sendResponse({
+				'title' : document.title,
+				'dualScreenLeft' : dualScreenLeft,
+				'dualScreenTop' : dualScreenTop,
+				'windowWidth' : screen.width,
+				'windowHeight' : screen.height
+			});
+			
+			// Now get all the data
+			var htmlNode = document.getElementsByTagName("html")[0];
+			var html = transform(htmlNode);
+			var allElements = mapElement(htmlNode, "//html[1]", {
+				"//html[1]" : html
+			});
+		    
+		    chrome.runtime.sendMessage({
 				'message' : 'recheck-web_send_data',
 				'allElements' : JSON.stringify(allElements),
 				'title' : document.title,
-				'url' : window.location.href,
+				'url' : document.location.href,
+				'toplevel' : isToplevelFrame(),
 				'osName' : navigator.platform,
 				'osVersion' : navigator.oscpu,
 				'browserName' : navigator.appName,
