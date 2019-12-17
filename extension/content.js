@@ -1,18 +1,10 @@
 // content.js
 
 if (!alreadyInjected) {
-
+	
 	var alreadyInjected = true;
 
 	var WANTED_WIDTH = 800;
-
-	function getOs() {
-		return navigator.oscpu;
-	}
-
-	function getBrowser() {
-		return navigator.vendor + ' ' + navigator.vendorSub;
-	}
 
 	function resizeDataUrl(dataUrl) {
 		var img = document.createElement('img');
@@ -36,34 +28,55 @@ if (!alreadyInjected) {
 		img.src = dataUrl;
 	}
 
+	function isToplevelFrame() {
+	    try {
+	        return window.self === window.top;
+	    } catch (e) {
+	        return false;
+	    }
+	}
+	
 	chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+		console.log("Received " + request.message + " in frame with URL " + document.location.href);
 		if (request.message === 'recheck-web_clicked') {
-			var htmlNode = document.getElementsByTagName("html")[0];
-			var html = transform(htmlNode);
-			var allElements = mapElement(htmlNode, "//html[1]", {
-				"//html[1]" : html
-			});
+			
 		    // Fixes dual-screen position                         Most browsers      Firefox
 		    var dualScreenLeft = window.screenLeft != undefined ? window.screenLeft : window.screenX;
 		    var dualScreenTop = window.screenTop != undefined ? window.screenTop : window.screenY;
 
 		    var windowWidth = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
-		    var windowHeight = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
-
+		    
 		    var systemZoom = windowWidth / window.screen.availWidth;
+			
 			sendResponse({
+				'title' : document.title,
+				'dualScreenLeft' : dualScreenLeft,
+				'dualScreenTop' : dualScreenTop,
+				'windowWidth' : screen.width,
+				'windowHeight' : screen.height
+			});
+			
+			// Now get all the data
+			var htmlNode = document.getElementsByTagName("html")[0];
+			var html = transform(htmlNode);
+			var allElements = mapElement(htmlNode, "//html[1]", {
+				"//html[1]" : html
+			});
+		    
+		    chrome.runtime.sendMessage({
 				'message' : 'recheck-web_send_data',
 				'allElements' : JSON.stringify(allElements),
 				'title' : document.title,
-				'url' : window.location.href,
-				'os' : getOs(),
-				'browser' : getBrowser(),
-				'screenWidth' : screen.width,
-				'screenHeight' : screen.height,
+				'url' : document.location.href,
+				'toplevel' : isToplevelFrame(),
+				'osName' : navigator.platform,
+				'osVersion' : navigator.oscpu,
+				'browserName' : navigator.appName,
+				'browserVersion' : navigator.appVersion,
 				'dualScreenLeft' : dualScreenLeft,
 				'dualScreenTop' : dualScreenTop,
-				'windowWidth' : windowWidth,
-				'windowHeight' : windowHeight,
+				'windowWidth' : screen.width,
+				'windowHeight' : screen.height,
 				'systemZoom' : systemZoom
 			});
 		}
