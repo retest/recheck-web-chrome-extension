@@ -331,7 +331,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 			console.log("Receiving data from content " + request.url + ".");
 			data = request;
 			data.allElements = JSON.parse(data.allElements);
-			while(frameData.length > 0) {
+			while (frameData.length > 0) {
 				addToData(frameData.pop());
 			}
 		} else {
