@@ -137,7 +137,9 @@ function transform(node) {
 	for (var i = 0; i < attrs.length; i++) {
 		var attributeName = attrs[i].name;
 		var attributeValue = attrs[i].value;
-		extractedAttributes[attributeName] = attributeValue;
+        if (attributeValue && attributeValue != "" && attributeValue != "null") { 
+            extractedAttributes[attributeName] = attributeValue;
+        }
 	}
 	
 	// overwrite empty attributes (e.g. 'disabled')
