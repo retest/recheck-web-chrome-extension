@@ -9,6 +9,8 @@ const RESPONSE_REPORT_CREATED = 'recheck-web-Report-created';
 const ERROR_MSG = 'There was an error in the recheck plugin. Please refresh this page and try again.\n\nIf it still does not work, please consider reporting a bug at\nhttps://github.com/retest/recheck-web-chrome-extension/issues\n\nThank you!';
 const ERROR_MSG_TOO_LARGE = 'Website is too large for demo.\n\nChecking large sites incurrs significant traffic, processing and storage costs. Since this is only a demo, we therefore limited the size of websites that you can check.\n\nTo check larger sites, please use the full version or contact us.';
 
+const TOPLEVEL_FRAMEID = 0;
+
 var activeWindowId;
 var activeTab;
 var activeTabId;
@@ -279,17 +281,30 @@ function getFramePrefixWithUrl(allElements, url) {
 			}
 		} 
 	}
-	console.log("Found no frame prefix with URL " + url);
 	return "";
 }
 
-function addToData(request) {
+function addFrameToData(request) {
 	var prefix = getFramePrefixWithUrl(data.allElements, request.url);
+	if (prefix === "") {
+		frameData.push(request);
+		console.log("Found no frame prefix with URL " + request.url + " postponing processing.");
+		return;
+	}
 	var allNewElements = JSON.parse(request.allElements);
 	var entries = Object.entries(allNewElements);
 	// add all elements with prefix of frame
 	for (const [path, properties] of entries) {
 		data.allElements[prefix + path.replace("//", "/")] = properties; 
+	}
+}
+
+function tryToAddAllReceivedFramesToData() {
+	var i = 0;
+	var limit = frameData.length * 2;
+	while (i < limit && frameData.length > 0) {
+		i++;
+		addFrameToData(frameData.shift());
 	}
 }
 
@@ -325,19 +340,16 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 		sendData(request.name, request.action);
 	}
 	if (request.message === 'recheck-web_send_data') {
-		if (request.toplevel) {
+		if (sender.frameId == TOPLEVEL_FRAMEID) {
 			console.log("Receiving data from content " + request.url + ".");
 			data = request;
 			data.allElements = JSON.parse(data.allElements);
-			while(frameData.length > 0) {
-				addToData(frameData.pop());
-			}
+			tryToAddAllReceivedFramesToData();
 		} else {
 			console.log("Receiving second data package from another content " + request.url + ".");
-			if (data == null) {
-				frameData.push(request);
-			} else {
-				addToData(request);
+			frameData.push(request);
+			if (data) {
+				tryToAddAllReceivedFramesToData();
 			}
 		}
 	}

@@ -27,14 +27,6 @@ if (!alreadyInjected) {
 
 		img.src = dataUrl;
 	}
-
-	function isToplevelFrame() {
-	    try {
-	        return window.self === window.top;
-	    } catch (e) {
-	        return false;
-	    }
-	}
 	
 	chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 		console.log("Received " + request.message + " in frame with URL " + document.location.href);
@@ -68,7 +60,6 @@ if (!alreadyInjected) {
 				'allElements' : JSON.stringify(allElements),
 				'title' : document.title,
 				'url' : document.location.href,
-				'toplevel' : isToplevelFrame(),
 				'osName' : navigator.platform,
 				'osVersion' : navigator.oscpu,
 				'browserName' : navigator.appName,
