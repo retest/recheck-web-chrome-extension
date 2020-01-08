@@ -281,17 +281,30 @@ function getFramePrefixWithUrl(allElements, url) {
 			}
 		} 
 	}
-	console.log("Found no frame prefix with URL " + url);
 	return "";
 }
 
-function addToData(request) {
+function addFrameToData(request) {
 	var prefix = getFramePrefixWithUrl(data.allElements, request.url);
+	if (prefix === "") {
+		frameData.push(request);
+		console.log("Found no frame prefix with URL " + request.url + " postponing processing.");
+		return;
+	}
 	var allNewElements = JSON.parse(request.allElements);
 	var entries = Object.entries(allNewElements);
 	// add all elements with prefix of frame
 	for (const [path, properties] of entries) {
 		data.allElements[prefix + path.replace("//", "/")] = properties; 
+	}
+}
+
+function tryToAddAllReceivedFramesToData() {
+	var i = 0;
+	var limit = frameData.length * 2;
+	while (i < limit && frameData.length > 0) {
+		i++;
+		addFrameToData(frameData.shift());
 	}
 }
 
@@ -331,15 +344,12 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 			console.log("Receiving data from content " + request.url + ".");
 			data = request;
 			data.allElements = JSON.parse(data.allElements);
-			while (frameData.length > 0) {
-				addToData(frameData.pop());
-			}
+			tryToAddAllReceivedFramesToData();
 		} else {
 			console.log("Receiving second data package from another content " + request.url + ".");
-			if (data == null) {
-				frameData.push(request);
-			} else {
-				addToData(request);
+			frameData.push(request);
+			if (data) {
+				tryToAddAllReceivedFramesToData();
 			}
 		}
 	}
