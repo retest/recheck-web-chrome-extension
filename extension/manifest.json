@@ -1,6 +1,6 @@
 {
 	"name": "recheck-web Demo",
-	"version": "0.9.2",
+	"version": "0.9.4",
 	"manifest_version": 2,
 	"description": "One-click change detection of websites.",
 	"permissions": [
