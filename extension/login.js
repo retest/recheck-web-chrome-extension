@@ -1,7 +1,7 @@
 var keycloak = Keycloak({
-	url : 'https://sso.prod.cloud.retest.org/auth',
+	url : 'https://login.retest.de/auth',
 	realm : 'customer',
-	clientId : 'babelfish'
+	clientId : 'rehub'
 });
 
 window.addEventListener("load", function(event) {
