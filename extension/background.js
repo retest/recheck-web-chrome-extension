@@ -55,7 +55,7 @@ function requestExistingGoldenMasterNames(token) {
 	xhr.setRequestHeader('Content-Type', 'application/json');
 	xhr.setRequestHeader('Authorization', 'Bearer ' + token);
 	xhr.onreadystatechange = function() {
-		if (xhr.readyState === 4) {
+		if (xhr.readyState === XMLHttpRequest.DONE) {
 			if (xhr.status === 200) {
 				existingGoldenMasterNames = JSON.parse(xhr.response);
 			}
@@ -181,7 +181,7 @@ function openReports() {
 }
 
 function handleServerResponse(readyState, status, response, name) {
-	if (readyState === 4) {
+	if (readyState === XMLHttpRequest.DONE) {
 		abort(null);
 		if (status === 200) {
 			if (response === RESPONSE_GOLDEN_MASTER_CREATED) {
