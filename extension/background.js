@@ -24,16 +24,6 @@ var emergencyReset;
 var data;
 var frameData = [];
 
-function errorHandler(reason) {
-	console.log(reason);
-}
-
-function progress(complete) {}
-
-function splitnotifier() {
-	console.log('split-image');
-}
-
 function abort(msg) {
 	chrome.runtime.sendMessage({
 		'message' : 'recheck-web_aborted'
@@ -88,7 +78,7 @@ function requestScreenshots() {
 			'message' : 'recheck-web_resize_img',
 			'dataUrls' : dataUrlsInput
 		}, {'frameId' : 0});
-	}, errorHandler, progress, splitnotifier);
+	}, reason => console.log(reason), () => {}, () => console.log('split-image'));
 }
 
 function requestData() {
