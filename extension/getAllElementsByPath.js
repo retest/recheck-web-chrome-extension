@@ -1,5 +1,5 @@
 // This is copied from attributes.yaml
-cssAttributes = [ "align-content", "align-items", "align-self", "all",
+const CSS_ATTRIBUTES = [ "align-content", "align-items", "align-self", "all",
 		"animation-name", "animation-duration", "animation-timing-function",
 		"animation-delay", "animation-iteration-count", "animation-direction",
 		"animation-fill-mode", "animation-play-state", "backface-visibility",
@@ -49,9 +49,9 @@ cssAttributes = [ "align-content", "align-items", "align-self", "all",
 		"user-select", "vertical-align", "visibility", "white-space",
 		"word-break", "word-spacing", "word-wrap", "z-index", ];
 
-var ELEMENT_NODE = 1;
-var TEXT_NODE = 3;
-var DOCUMENT_TYPE_NODE = 10;
+const ELEMENT_NODE = 1;
+const TEXT_NODE = 3;
+const DOCUMENT_TYPE_NODE = 10;
 
 function Counter() {
 	this.map = {};
@@ -152,8 +152,8 @@ function transform(node) {
 	try {
 		parentStyle = window.getComputedStyle(node.parentNode);
 	} catch (err) {}
-	for (let i = 0; i < cssAttributes.length; i++) {
-		const attributeName = cssAttributes[i];
+	for (let i = 0; i < CSS_ATTRIBUTES.length; i++) {
+		const attributeName = CSS_ATTRIBUTES[i];
 		if (!extractedAttributes[attributeName]) {
 			if (parentStyle[attributeName] !== style[attributeName]) {
 				extractedAttributes[attributeName] = style[attributeName];

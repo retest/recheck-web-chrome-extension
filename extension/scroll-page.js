@@ -1,4 +1,4 @@
-var CAPTURE_DELAY = 150;
+const CAPTURE_DELAY = 150;
 
 var fullWidth;
 var fullHeight;

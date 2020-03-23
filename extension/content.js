@@ -4,7 +4,7 @@ if (!alreadyInjected) {
 	
 	var alreadyInjected = true;
 
-	var WANTED_WIDTH = 800;
+	const WANTED_WIDTH = 800;
 
 	function resizeDataUrl(dataUrl) {
 		var img = document.createElement('img');

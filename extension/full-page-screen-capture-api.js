@@ -1,8 +1,8 @@
 window.CaptureAPI = (function() {
 
-	var MAX_PRIMARY_DIMENSION = 15000 * 2;
-	var MAX_SECONDARY_DIMENSION = 4000 * 2;
-	var MAX_AREA = MAX_PRIMARY_DIMENSION * MAX_SECONDARY_DIMENSION;
+	const MAX_PRIMARY_DIMENSION = 15000 * 2;
+	const MAX_SECONDARY_DIMENSION = 4000 * 2;
+	const MAX_AREA = MAX_PRIMARY_DIMENSION * MAX_SECONDARY_DIMENSION;
 
 	function initiateCapture(tab, callback) {
 		console.log("Sending scroll request.");
