@@ -20,7 +20,7 @@ window.addEventListener("load", function(event) {
 		});
 		window.close();
 	}).error(function(errorData) {
-		document.getElementById('messages').innerHTML = '<b>Failed to load data. Error: ' + JSON.stringify(errorData) + '</b>';
+		document.getElementById('messages').innerHTML = `<b>Failed to load data. Error: ${JSON.stringify(errorData)}</b>`;
 	});
 });
 

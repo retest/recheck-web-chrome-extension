@@ -132,7 +132,7 @@ function getPositions(callback) {
 			// In case the below callback never returns, cleanup
 			var cleanUpTimeout = window.setTimeout(cleanUp, 1250);
 
-			console.log("Scrolled to " + x + ", " + y + " sending capture request.");
+			console.log(`Scrolled to ${x}, ${y} sending capture request.`);
 			chrome.runtime.sendMessage(data, function(captured) {
 				window.clearTimeout(cleanUpTimeout);
 

@@ -69,7 +69,7 @@ function processDataUrls(dataUrlsInput) {
 	}
 
 	dataUrlsLength = dataUrlsInput.length;
-	console.log("Received " + dataUrlsLength + " screenshots, now requesting resize.");
+	console.log(`Received ${dataUrlsLength} screenshots, now requesting resize.`);
 
 	chrome.tabs.sendMessage(activeTabId, {
 		'message': 'recheck-web_resize_img',
@@ -126,7 +126,7 @@ function requestGoldenMasterName(data) {
 	var w = 800;
 	var h = 450;
 	title = sanitize(data.title);
-	console.log("Requesting user input for " + title);
+	console.log(`Requesting user input for ${title}`);
     var left = Math.round(((data.windowWidth - w) / 2) + data.dualScreenLeft);
     var top = Math.round(((data.windowHeight - h) / 2) + data.dualScreenTop);
 	chrome.windows.create({
@@ -147,7 +147,7 @@ function sendData(name, action) {
 	xhr.onreadystatechange = function() {
 		handleServerResponse(xhr.readyState, xhr.status, xhr.response, name);
 	};
-	console.log("Sending data to " + MAPPING_SERVICE_URL);
+	console.log(`Sending data to ${MAPPING_SERVICE_URL}`);
 	chrome.runtime.sendMessage({
 		'message' : 'recheck-web_sendData'
 	});
@@ -181,10 +181,10 @@ function openReports() {
 function handleSuccessfulResponse(response, name, status) {
 	switch (response) {
 		case RESPONSE_GOLDEN_MASTER_CREATED:
-			alert('Created Golden Master "' + name + '".');
+			alert(`Created Golden Master "${name}".`);
 			break;
 		case 0:
-			console.log("Server responded with status " + status + ", response: " + response);
+			console.log(`Server responded with status ${status}, response: ${response}`);
 			alert(ERROR_MSG_TOO_LARGE);
 			break;
 		case RESPONSE_REPORT_CREATED:
@@ -203,7 +203,7 @@ function handleSuccessfulResponse(response, name, status) {
 			}
 			break;
 		default:
-			console.log("Error interacting with the retest server, response: " + response);
+			console.log(`Error interacting with the retest server, response: ${response}`);
 			alert('Error interacting with the retest server:\n\n' + response
 				+ '\n\nPlease refresh this page and try again. If it still does not work, please contact support: support@retest.de');
 			break;
@@ -216,16 +216,16 @@ function handleServerResponse(readyState, status, response, name) {
 		if (status === 200) {
 			handleSuccessfulResponse(response, name, status);
 		} else if (status === 403) {
-			console.log("Server responded with status " + status);
+			console.log(`Server responded with status ${status}`);
 			alert('Something is wrong with your access rights.\nPlease contact support: support@retest.de');
 		} else if (status === 413) {
-			console.log("Server responded with status " + status);
+			console.log(`Server responded with status ${status}`);
 			alert(ERROR_MSG_TOO_LARGE);
 		} else if (status >= 500 && status < 600) {
-			console.log("Server responded with status " + status + ", response: " + response);
+			console.log(`Server responded with status ${status}, response: ${response}`);
 			alert('Error interacting with the retest server. \n\nPlease refresh this page and try again. If it still does not work, please contact support: support@retest.de');
 		} else {
-			console.log("Server responded with status " + status + ", response: " + response);
+			console.log(`Server responded with status ${status}, response: ${response}`);
 			alert('Error interacting with the retest server (status ' + status + '):\n\n' + response
 					+ '\n\nPlease refresh this page and try again. If it still does not work, please contact support: support@retest.de');
 		}
@@ -294,7 +294,7 @@ function addFrameToData(request) {
 	var prefix = getFramePrefixWithUrl(data.allElements, request.url);
 	if (prefix === "") {
 		frameData.push(request);
-		console.log("Found no frame prefix with URL " + request.url + " postponing processing.");
+		console.log(`Found no frame prefix with URL ${request.url} postponing processing.`);
 		return;
 	}
 	var allNewElements = JSON.parse(request.allElements);
@@ -328,7 +328,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 		if (dataUrls.length === dataUrlsLength) {
 			requestData();
 		} else {
-			console.log("Waiting for " + (dataUrlsLength - dataUrls.length) + " more images before continuing.");
+			console.log(`Waiting for ${dataUrlsLength - dataUrls.length} more images before continuing.`);
 		}
 		sendResponse();
 	}
@@ -347,12 +347,12 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 	}
 	if (request.message === 'recheck-web_send_data') {
 		if (sender.frameId === TOPLEVEL_FRAMEID) {
-			console.log("Receiving data from content " + request.url + ".");
+			console.log(`Receiving data from content ${request.url}.`);
 			data = request;
 			data.allElements = JSON.parse(data.allElements);
 			tryToAddAllReceivedFramesToData();
 		} else {
-			console.log("Receiving second data package from another content " + request.url + ".");
+			console.log(`Receiving second data package from another content ${request.url}.`);
 			frameData.push(request);
 			if (data) {
 				tryToAddAllReceivedFramesToData();

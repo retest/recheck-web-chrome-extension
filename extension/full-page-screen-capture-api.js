@@ -37,7 +37,7 @@ window.CaptureAPI = (function() {
 					// match it!
 					if (data.windowWidth !== image.width) {
 						var scale = image.width / data.windowWidth;
-						console.log("Found window width is not image width, using scale: " + scale);
+						console.log(`Found window width is not image width, using scale: ${scale}`);
 						data.x *= scale;
 						data.y *= scale;
 						data.totalWidth *= scale;
@@ -58,7 +58,7 @@ window.CaptureAPI = (function() {
 
 					// draw it on matching screenshot canvases
 					_filterScreenshots(data.x, data.y, image.width, image.height, screenshots).forEach(function(screenshot) {
-						console.log("Drawing image on " + (data.x - screenshot.left) + "/" + (data.y - screenshot.top) + ".");
+						console.log(`Drawing image on ${data.x - screenshot.left}/${data.y - screenshot.top}.`);
 						screenshot.ctx.drawImage(image, data.x - screenshot.left, data.y - screenshot.top);
 					});
 
