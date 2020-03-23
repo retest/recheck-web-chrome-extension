@@ -11,7 +11,7 @@ window.addEventListener("load", function(event) {
 		console.log("Sending login info.")
 		var email = null;
 		if (keycloak.idTokenParsed) {
-			email = keycloak.idTokenParsed.email;
+			email = keycloak.idTokenParsed.upn;
 		}
 		chrome.runtime.sendMessage({
 			'message' : 'recheck-web_login',
