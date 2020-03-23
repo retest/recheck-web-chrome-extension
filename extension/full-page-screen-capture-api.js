@@ -37,7 +37,7 @@ window.CaptureAPI = (function() {
 					// match it!
 					if (data.windowWidth !== image.width) {
 						var scale = image.width / data.windowWidth;
-						console.log("Found window width is not image width, using scaele: " + scale);
+						console.log("Found window width is not image width, using scale: " + scale);
 						data.x *= scale;
 						data.y *= scale;
 						data.totalWidth *= scale;
