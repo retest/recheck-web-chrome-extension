@@ -7,7 +7,7 @@ const RESPONSE_GOLDEN_MASTER_CREATED = 'recheck-web-Golden-Master-created';
 const RESPONSE_REPORT_CREATED = 'recheck-web-Report-created';
 
 const ERROR_MSG = 'There was an error in the recheck plugin. Please refresh this page and try again.\n\nIf it still does not work, please consider reporting a bug at\nhttps://github.com/retest/recheck-web-chrome-extension/issues\n\nThank you!';
-const ERROR_MSG_TOO_LARGE = 'Website is too large for demo.\n\nChecking large sites incurrs significant traffic, processing and storage costs. Since this is only a demo, we therefore limited the size of websites that you can check.\n\nTo check larger sites, please use the full version or contact us.';
+const ERROR_MSG_TOO_LARGE = 'Website is too large for demo.\n\nChecking large sites incurs significant traffic, processing and storage costs. Since this is only a demo, we therefore limited the size of websites that you can check.\n\nTo check larger sites, please use the full version or contact us.';
 
 const TOPLEVEL_FRAMEID = 0;
 
