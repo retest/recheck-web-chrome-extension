@@ -60,7 +60,7 @@ function requestExistingGoldenMasterNames(token) {
 				existingGoldenMasterNames = JSON.parse(xhr.response);
 			}
 		}
-	}
+	};
 	console.log("Requesting existing Golden Master names at " + GOLDEN_MASTER_SERVICE_URL);
 	xhr.send('Requesting all existing Golden Master names.');
 }
@@ -148,7 +148,7 @@ function sendData(name, action) {
 	xhr.setRequestHeader('Authorization', 'Bearer ' + token);
 	xhr.onreadystatechange = function() {
 		handleServerResponse(xhr.readyState, xhr.status, xhr.response, name);
-	}
+	};
 	console.log("Sending data to " + MAPPING_SERVICE_URL);
 	chrome.runtime.sendMessage({
 		'message' : 'recheck-web_sendData'
