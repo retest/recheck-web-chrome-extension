@@ -59,7 +59,7 @@ function checkGoldenMasterExists() {
 	var existing = $('compareName');
 	var textField = $('createName');
 	var button = $('create');
-	if (textField.value != '') {
+	if (textField.value !== '') {
 		for (i = 0; i < existing.length; ++i) {
 			if (existing.options[i].value === textField.value) {
 				existing.selectedIndex = i;

@@ -1,4 +1,4 @@
-var CAPTURE_DELAY = 150;
+const CAPTURE_DELAY = 150;
 
 var fullWidth;
 var fullHeight;
@@ -8,7 +8,7 @@ function onMessage(data, sender, callback) {
 		console.log("Received scroll request.");
 		getPositions(callback);
 		return true;
-	} else if (data.msg == 'logMessage') {
+	} else if (data.msg === 'logMessage') {
 		console.log('[POPUP LOG]', data.data);
 	}
 }

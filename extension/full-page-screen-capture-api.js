@@ -1,8 +1,8 @@
 window.CaptureAPI = (function() {
 
-	var MAX_PRIMARY_DIMENSION = 15000 * 2;
-	var MAX_SECONDARY_DIMENSION = 4000 * 2;
-	var MAX_AREA = MAX_PRIMARY_DIMENSION * MAX_SECONDARY_DIMENSION;
+	const MAX_PRIMARY_DIMENSION = 15000 * 2;
+	const MAX_SECONDARY_DIMENSION = 4000 * 2;
+	const MAX_AREA = MAX_PRIMARY_DIMENSION * MAX_SECONDARY_DIMENSION;
 
 	function initiateCapture(tab, callback) {
 		console.log("Sending scroll request.");
@@ -37,7 +37,7 @@ window.CaptureAPI = (function() {
 					// match it!
 					if (data.windowWidth !== image.width) {
 						var scale = image.width / data.windowWidth;
-						console.log("Found window width is not image width, using scaele: " + scale);
+						console.log("Found window width is not image width, using scale: " + scale);
 						data.x *= scale;
 						data.y *= scale;
 						data.totalWidth *= scale;
@@ -84,16 +84,16 @@ window.CaptureAPI = (function() {
 		var maxWidth = (!badSize ? totalWidth : (biggerWidth ? MAX_PRIMARY_DIMENSION : MAX_SECONDARY_DIMENSION));
 		var maxHeight = (!badSize ? totalHeight : (biggerWidth ? MAX_SECONDARY_DIMENSION : MAX_PRIMARY_DIMENSION));
 		var numCols = Math.ceil(totalWidth / maxWidth);
-		var numRows = Math.ceil(totalHeight / maxHeight), row, col, canvas, left, top;
+		var numRows = Math.ceil(totalHeight / maxHeight);
 
 		var canvasIndex = 0;
 		var result = [];
 
-		for (row = 0; row < numRows; row++) {
-			for (col = 0; col < numCols; col++) {
+		for (var row = 0; row < numRows; row++) {
+			for (var col = 0; col < numCols; col++) {
 				var canvas = document.createElement('canvas');
-				canvas.width = (col == numCols - 1 ? totalWidth % maxWidth || maxWidth : maxWidth);
-				canvas.height = (row == numRows - 1 ? totalHeight % maxHeight || maxHeight : maxHeight);
+				canvas.width = (col === numCols - 1 ? totalWidth % maxWidth || maxWidth : maxWidth);
+				canvas.height = (row === numRows - 1 ? totalHeight % maxHeight || maxHeight : maxHeight);
 
 				var left = col * maxWidth;
 				var top = row * maxHeight;

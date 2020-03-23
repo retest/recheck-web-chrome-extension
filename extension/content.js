@@ -4,7 +4,7 @@ if (!alreadyInjected) {
 	
 	var alreadyInjected = true;
 
-	var WANTED_WIDTH = 800;
+	const WANTED_WIDTH = 800;
 
 	function resizeDataUrl(dataUrl) {
 		var img = document.createElement('img');
@@ -33,8 +33,8 @@ if (!alreadyInjected) {
 		if (request.message === 'recheck-web_clicked') {
 			
 		    // Fixes dual-screen position                         Most browsers      Firefox
-		    var dualScreenLeft = window.screenLeft != undefined ? window.screenLeft : window.screenX;
-		    var dualScreenTop = window.screenTop != undefined ? window.screenTop : window.screenY;
+		    var dualScreenLeft = window.screenLeft !== undefined ? window.screenLeft : window.screenX;
+		    var dualScreenTop = window.screenTop !== undefined ? window.screenTop : window.screenY;
 
 		    var windowWidth = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
 		    
