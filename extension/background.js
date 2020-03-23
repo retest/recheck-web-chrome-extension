@@ -55,30 +55,38 @@ function requestExistingGoldenMasterNames(token) {
 	xhr.send('Requesting all existing Golden Master names.');
 }
 
+function processDataUrls(dataUrlsInput) {
+	if (dataUrlsInput.length === 0) {
+		if (chrome.runtime.lastError && activeTab.url.startsWith("file://")) {
+			abort("Local file access disabled.\n\nPlease go to the extension configuration (chrome://extensions/) and enable \"Allow access to file URLs\" for this extension.");
+		} else if (!activeTab.url || activeTab.url === '' || activeTab.url.startsWith('chrome://') || activeTab.url.startsWith('https://chrome.google.com/')) {
+			abort("Chrome disallows extensions access to certain URLs. This is one of them. Please visit another website and try again.");
+		} else {
+			console.error("No screenshots received, aborting...");
+			abort(ERROR_MSG);
+		}
+		return;
+	}
+
+	dataUrlsLength = dataUrlsInput.length;
+	console.log("Received " + dataUrlsLength + " screenshots, now requesting resize.");
+
+	chrome.tabs.sendMessage(activeTabId, {
+		'message': 'recheck-web_resize_img',
+		'dataUrls': dataUrlsInput
+	}, {'frameId': 0});
+}
+
+
 function requestScreenshots() {
 	console.log("Requesting screenshots.");
+
 	chrome.runtime.sendMessage({
 		'message' : 'recheck-web_captureScreenshot'
 	});
-	CaptureAPI.captureToDataUrls(activeTab, function(dataUrlsInput) {
-		if (dataUrlsInput.length === 0) {
-		    if (chrome.runtime.lastError && activeTab.url.startsWith("file://")) {
-				abort("Local file access disabled.\n\nPlease go to the extension configuration (chrome://extensions/) and enable \"Allow access to file URLs\" for this extension.");
-			} else if (!activeTab.url || activeTab.url === '' || activeTab.url.startsWith('chrome://') || activeTab.url.startsWith('https://chrome.google.com/')) {
-		    	abort("Chrome disallows extensions access to certain URLs. This is one of them. Please visit another website and try again.");
-		    } else {
-		    	console.error("No screenshots received, aborting...");
-		    	abort(ERROR_MSG);
-		    }
-		    return;
-		}
-		dataUrlsLength = dataUrlsInput.length;
-		console.log("Received " + dataUrlsLength + " screenshots, now requesting resize.");
-		chrome.tabs.sendMessage(activeTabId, {
-			'message' : 'recheck-web_resize_img',
-			'dataUrls' : dataUrlsInput
-		}, {'frameId' : 0});
-	}, reason => console.log(reason), () => {}, () => console.log('split-image'));
+
+	CaptureAPI.captureToDataUrls(activeTab, processDataUrls, err => console.log(err), () => {},
+		() => console.log('split-image'));
 }
 
 function requestData() {
