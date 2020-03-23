@@ -178,34 +178,43 @@ function openReports() {
 	});
 }
 
+function handleSuccessfulResponse(response, name, status) {
+	switch (response) {
+		case RESPONSE_GOLDEN_MASTER_CREATED:
+			alert('Created Golden Master "' + name + '".');
+			break;
+		case 0:
+			console.log("Server responded with status " + status + ", response: " + response);
+			alert(ERROR_MSG_TOO_LARGE);
+			break;
+		case RESPONSE_REPORT_CREATED:
+			if (!reportTab) {
+				openReports();
+			} else {
+				chrome.tabs.get(reportTab.id, function callback(tab) {
+					if (chrome.runtime.lastError || tab.url !== REPORT_DASHBOARD_URL) {
+						reportTab = null;
+						openReports();
+					} else {
+						chrome.tabs.reload(reportTab.id);
+						chrome.tabs.update(reportTab.id, {'active': true}, () => {});
+					}
+				});
+			}
+			break;
+		default:
+			console.log("Error interacting with the retest server, response: " + response);
+			alert('Error interacting with the retest server:\n\n' + response
+				+ '\n\nPlease refresh this page and try again. If it still does not work, please contact support: support@retest.de');
+			break;
+	}
+}
+
 function handleServerResponse(readyState, status, response, name) {
 	if (readyState === XMLHttpRequest.DONE) {
 		abort(null);
 		if (status === 200) {
-			if (response === RESPONSE_GOLDEN_MASTER_CREATED) {
-				alert('Created Golden Master "' + name + '".');
-			} else if (response === 0) {
-				console.log("Server responded with status " + status + ", response: " + response);
-				alert(ERROR_MSG_TOO_LARGE);
-			} else if (response === RESPONSE_REPORT_CREATED) {
-				if (!reportTab) {
-					openReports();
-				} else {
-					chrome.tabs.get(reportTab.id, function callback(tab) {
-						if (chrome.runtime.lastError || tab.url !== REPORT_DASHBOARD_URL) {
-							reportTab = null;
-							openReports();
-						} else {
-							chrome.tabs.reload(reportTab.id);
-							chrome.tabs.update(reportTab.id, { 'active': true }, (tab) => { });
-						}
-					});
-				}
-			} else {
-				console.log("Error interacting with the retest server, response: " + response)
-				alert('Error interacting with the retest server:\n\n' + response
-						+ '\n\nPlease refresh this page and try again. If it still does not work, please contact support: support@retest.de');
-			}
+			handleSuccessfulResponse(response, name, status);
 		} else if (status === 403) {
 			console.log("Server responded with status " + status);
 			alert('Something is wrong with your access rights.\nPlease contact support: support@retest.de');
