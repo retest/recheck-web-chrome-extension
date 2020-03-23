@@ -57,7 +57,7 @@ function requestExistingGoldenMasterNames(token) {
 	xhr.setRequestHeader('Authorization', 'Bearer ' + token);
 	xhr.onreadystatechange = function() {
 		if (xhr.readyState === 4) {
-			if (xhr.status == 200) {
+			if (xhr.status === 200) {
 				existingGoldenMasterNames = JSON.parse(xhr.response);
 			}
 		}
@@ -184,10 +184,10 @@ function openReports() {
 function handleServerResponse(readyState, status, response, name) {
 	if (readyState === 4) {
 		abort(null);
-		if (status == 200) {
+		if (status === 200) {
 			if (response === RESPONSE_GOLDEN_MASTER_CREATED) {
 				alert('Created Golden Master "' + name + '".');
-			} else if (response == 0) {
+			} else if (response === 0) {
 				console.log("Server responded with status " + status + ", response: " + response);
 				alert(ERROR_MSG_TOO_LARGE);
 			} else if (response === RESPONSE_REPORT_CREATED) {
@@ -195,7 +195,7 @@ function handleServerResponse(readyState, status, response, name) {
 					openReports();
 				} else {
 					chrome.tabs.get(reportTab.id, function callback(tab) {
-						if (chrome.runtime.lastError || tab.url != REPORT_DASHBOARD_URL) {
+						if (chrome.runtime.lastError || tab.url !== REPORT_DASHBOARD_URL) {
 							reportTab = null;
 							openReports();
 						} else {
@@ -209,10 +209,10 @@ function handleServerResponse(readyState, status, response, name) {
 				alert('Error interacting with the retest server:\n\n' + response
 						+ '\n\nPlease refresh this page and try again. If it still does not work, please contact support: support@retest.de');
 			}
-		} else if (status == 403) {
+		} else if (status === 403) {
 			console.log("Server responded with status " + status);
 			alert('Something is wrong with your access rights.\nPlease contact support: support@retest.de');
-		} else if (status == 413) {
+		} else if (status === 413) {
 			console.log("Server responded with status " + status);
 			alert(ERROR_MSG_TOO_LARGE);
 		} else if (status >= 500 && status < 600) {
@@ -274,7 +274,7 @@ function getFramePrefixWithUrl(allElements, url) {
 	// iterate over all elements
 	for (const [path, properties] of entries) {
 		// find iframe or frame with same URL
-		if (properties.tagName == "iframe" || properties.tagName == "frame") {
+		if (properties.tagName === "iframe" || properties.tagName === "frame") {
 			var src = properties.src;
 			if (url.endsWith(src)) {
 				return path;
@@ -340,7 +340,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 		sendData(request.name, request.action);
 	}
 	if (request.message === 'recheck-web_send_data') {
-		if (sender.frameId == TOPLEVEL_FRAMEID) {
+		if (sender.frameId === TOPLEVEL_FRAMEID) {
 			console.log("Receiving data from content " + request.url + ".");
 			data = request;
 			data.allElements = JSON.parse(data.allElements);

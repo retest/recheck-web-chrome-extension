@@ -92,8 +92,8 @@ window.CaptureAPI = (function() {
 		for (var row = 0; row < numRows; row++) {
 			for (var col = 0; col < numCols; col++) {
 				var canvas = document.createElement('canvas');
-				canvas.width = (col == numCols - 1 ? totalWidth % maxWidth || maxWidth : maxWidth);
-				canvas.height = (row == numRows - 1 ? totalHeight % maxHeight || maxHeight : maxHeight);
+				canvas.width = (col === numCols - 1 ? totalWidth % maxWidth || maxWidth : maxWidth);
+				canvas.height = (row === numRows - 1 ? totalHeight % maxHeight || maxHeight : maxHeight);
 
 				var left = col * maxWidth;
 				var top = row * maxHeight;

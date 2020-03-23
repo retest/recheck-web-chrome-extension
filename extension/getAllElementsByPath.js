@@ -67,10 +67,10 @@ function Counter() {
 
 function getText(node) {
 	var firstNode = node.childNodes[0];
-    if (firstNode && firstNode.nodeType == TEXT_NODE) {
+    if (firstNode && firstNode.nodeType === TEXT_NODE) {
 		return firstNode.nodeValue;
 	}
-    if (node.nodeType == TEXT_NODE) {
+    if (node.nodeType === TEXT_NODE) {
 		return node.nodeValue;
 	}
 	return "";
@@ -127,7 +127,7 @@ function transform(node) {
 		"shown": isShown(node)
 	};
 	
-    if (node.nodeType == TEXT_NODE) {
+    if (node.nodeType === TEXT_NODE) {
 		addCoordinates(extractedAttributes, node.parentNode);
 		return extractedAttributes;
 	}
@@ -137,7 +137,7 @@ function transform(node) {
 	for (var i = 0; i < attrs.length; i++) {
 		var attributeName = attrs[i].name;
 		var attributeValue = attrs[i].value;
-        if (attributeValue && attributeValue != "" && attributeValue != "null") { 
+        if (attributeValue && attributeValue !== "" && attributeValue !== "null") {
             extractedAttributes[attributeName] = attributeValue;
         }
 	}
@@ -155,7 +155,7 @@ function transform(node) {
 	for (var i = 0; i < cssAttributes.length; i++) {
 		var attributeName = cssAttributes[i];
 		if (!extractedAttributes[attributeName]) {
-			if (parentStyle[attributeName] != style[attributeName]) {
+			if (parentStyle[attributeName] !== style[attributeName]) {
 				extractedAttributes[attributeName] = style[attributeName];
 			}
 		}
@@ -167,7 +167,7 @@ function transform(node) {
 }
 
 function isShown(e) {
-    if (e.nodeType == TEXT_NODE) {
+    if (e.nodeType === TEXT_NODE) {
 		return isShown(e.parentNode);
 	}
 	return !!(e.offsetWidth || e.offsetHeight || e.getClientRects().length);
@@ -175,7 +175,7 @@ function isShown(e) {
 
 function isNonEmptyTextNode(node) {
     var nodeValue = (node.nodeValue == null) ? "" : node.nodeValue;
-    return node.nodeType == node.TEXT_NODE && nodeValue.trim().length > 0;
+    return node.nodeType === node.TEXT_NODE && nodeValue.trim().length > 0;
 }
 
 function containsOtherElements(element) {
@@ -189,8 +189,8 @@ function mapElement(element, parentPath, allElements) {
 	var counter = new Counter();
 	for (var i = 0; i < element.childNodes.length; i++) {
 		var child = element.childNodes[i];
-		if (child.nodeType == ELEMENT_NODE || (isNonEmptyTextNode(child) && containsOtherElements(element))) {
-			if (child.nodeType == TEXT_NODE) {
+		if (child.nodeType === ELEMENT_NODE || (isNonEmptyTextNode(child) && containsOtherElements(element))) {
+			if (child.nodeType === TEXT_NODE) {
 				child.tagName = "textnode";
 			}
 			var cnt = counter.increase(child);
