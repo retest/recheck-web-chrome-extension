@@ -7,7 +7,7 @@ const RESPONSE_GOLDEN_MASTER_CREATED = 'recheck-web-Golden-Master-created';
 const RESPONSE_REPORT_CREATED = 'recheck-web-Report-created';
 
 const ERROR_MSG = 'There was an error in the recheck plugin. Please refresh this page and try again.\n\nIf it still does not work, please consider reporting a bug at\nhttps://github.com/retest/recheck-web-chrome-extension/issues\n\nThank you!';
-const ERROR_MSG_TOO_LARGE = 'Website is too large for demo.\n\nChecking large sites incurrs significant traffic, processing and storage costs. Since this is only a demo, we therefore limited the size of websites that you can check.\n\nTo check larger sites, please use the full version or contact us.';
+const ERROR_MSG_TOO_LARGE = 'Website is too large for demo.\n\nChecking large sites incurs significant traffic, processing and storage costs. Since this is only a demo, we therefore limited the size of websites that you can check.\n\nTo check larger sites, please use the full version or contact us.';
 
 const TOPLEVEL_FRAMEID = 0;
 
@@ -24,16 +24,6 @@ var emergencyReset;
 var data;
 var frameData = [];
 
-function errorHandler(reason) {
-	console.log(reason);
-}
-
-function progress(complete) {}
-
-function splitnotifier() {
-	console.log('split-image');
-}
-
 function abort(msg) {
 	chrome.runtime.sendMessage({
 		'message' : 'recheck-web_aborted'
@@ -47,7 +37,6 @@ function abort(msg) {
 	activeWindowId = null;
 	activeTab = null;
 	activeTabId = null;
-	return;
 }
 
 function requestExistingGoldenMasterNames(token) {
@@ -56,40 +45,48 @@ function requestExistingGoldenMasterNames(token) {
 	xhr.setRequestHeader('Content-Type', 'application/json');
 	xhr.setRequestHeader('Authorization', 'Bearer ' + token);
 	xhr.onreadystatechange = function() {
-		if (xhr.readyState === 4) {
+		if (xhr.readyState === XMLHttpRequest.DONE) {
 			if (xhr.status === 200) {
 				existingGoldenMasterNames = JSON.parse(xhr.response);
 			}
 		}
-	}
+	};
 	console.log("Requesting existing Golden Master names at " + GOLDEN_MASTER_SERVICE_URL);
 	xhr.send('Requesting all existing Golden Master names.');
 }
 
+function processDataUrls(dataUrlsInput) {
+	if (dataUrlsInput.length === 0) {
+		if (chrome.runtime.lastError && activeTab.url.startsWith("file://")) {
+			abort("Local file access disabled.\n\nPlease go to the extension configuration (chrome://extensions/) and enable \"Allow access to file URLs\" for this extension.");
+		} else if (!activeTab.url || activeTab.url === '' || activeTab.url.startsWith('chrome://') || activeTab.url.startsWith('https://chrome.google.com/')) {
+			abort("Chrome disallows extensions access to certain URLs. This is one of them. Please visit another website and try again.");
+		} else {
+			console.error("No screenshots received, aborting...");
+			abort(ERROR_MSG);
+		}
+		return;
+	}
+
+	dataUrlsLength = dataUrlsInput.length;
+	console.log(`Received ${dataUrlsLength} screenshots, now requesting resize.`);
+
+	chrome.tabs.sendMessage(activeTabId, {
+		'message': 'recheck-web_resize_img',
+		'dataUrls': dataUrlsInput
+	}, {'frameId': 0});
+}
+
+
 function requestScreenshots() {
 	console.log("Requesting screenshots.");
+
 	chrome.runtime.sendMessage({
 		'message' : 'recheck-web_captureScreenshot'
 	});
-	CaptureAPI.captureToDataUrls(activeTab, function(dataUrlsInput) {
-		if (dataUrlsInput.length === 0) {
-		    if (chrome.runtime.lastError && activeTab.url.startsWith("file://")) {
-				abort("Local file access disabled.\n\nPlease go to the extension configuration (chrome://extensions/) and enable \"Allow access to file URLs\" for this extension.");
-			} else if (!activeTab.url || activeTab.url === '' || activeTab.url.startsWith('chrome://') || activeTab.url.startsWith('https://chrome.google.com/')) {
-		    	abort("Chrome disallows extensions access to certain URLs. This is one of them. Please visit another website and try again.");
-		    } else {
-		    	console.error("No screenshots received, aborting...");
-		    	abort(ERROR_MSG);
-		    }
-		    return;
-		}
-		dataUrlsLength = dataUrlsInput.length;
-		console.log("Received " + dataUrlsLength + " screenshots, now requesting resize.");
-		chrome.tabs.sendMessage(activeTabId, {
-			'message' : 'recheck-web_resize_img',
-			'dataUrls' : dataUrlsInput
-		}, {'frameId' : 0});
-	}, errorHandler, progress, splitnotifier);
+
+	CaptureAPI.captureToDataUrls(activeTab, processDataUrls, err => console.log(err), () => {},
+		() => console.log('split-image'));
 }
 
 function requestData() {
@@ -129,7 +126,7 @@ function requestGoldenMasterName(data) {
 	var w = 800;
 	var h = 450;
 	title = sanitize(data.title);
-	console.log("Requesting user input for " + title);
+	console.log(`Requesting user input for ${title}`);
     var left = Math.round(((data.windowWidth - w) / 2) + data.dualScreenLeft);
     var top = Math.round(((data.windowHeight - h) / 2) + data.dualScreenTop);
 	chrome.windows.create({
@@ -149,8 +146,8 @@ function sendData(name, action) {
 	xhr.setRequestHeader('Authorization', 'Bearer ' + token);
 	xhr.onreadystatechange = function() {
 		handleServerResponse(xhr.readyState, xhr.status, xhr.response, name);
-	}
-	console.log("Sending data to " + MAPPING_SERVICE_URL);
+	};
+	console.log(`Sending data to ${MAPPING_SERVICE_URL}`);
 	chrome.runtime.sendMessage({
 		'message' : 'recheck-web_sendData'
 	});
@@ -181,45 +178,54 @@ function openReports() {
 	});
 }
 
+function handleSuccessfulResponse(response, name, status) {
+	switch (response) {
+		case RESPONSE_GOLDEN_MASTER_CREATED:
+			alert(`Created Golden Master "${name}".`);
+			break;
+		case 0:
+			console.log(`Server responded with status ${status}, response: ${response}`);
+			alert(ERROR_MSG_TOO_LARGE);
+			break;
+		case RESPONSE_REPORT_CREATED:
+			if (!reportTab) {
+				openReports();
+			} else {
+				chrome.tabs.get(reportTab.id, function callback(tab) {
+					if (chrome.runtime.lastError || tab.url !== REPORT_DASHBOARD_URL) {
+						reportTab = null;
+						openReports();
+					} else {
+						chrome.tabs.reload(reportTab.id);
+						chrome.tabs.update(reportTab.id, {'active': true}, () => {});
+					}
+				});
+			}
+			break;
+		default:
+			console.log(`Error interacting with the retest server, response: ${response}`);
+			alert('Error interacting with the retest server:\n\n' + response
+				+ '\n\nPlease refresh this page and try again. If it still does not work, please contact support: support@retest.de');
+			break;
+	}
+}
+
 function handleServerResponse(readyState, status, response, name) {
-	if (readyState === 4) {
+	if (readyState === XMLHttpRequest.DONE) {
 		abort(null);
 		if (status === 200) {
-			if (response === RESPONSE_GOLDEN_MASTER_CREATED) {
-				alert('Created Golden Master "' + name + '".');
-			} else if (response === 0) {
-				console.log("Server responded with status " + status + ", response: " + response);
-				alert(ERROR_MSG_TOO_LARGE);
-			} else if (response === RESPONSE_REPORT_CREATED) {
-				if (!reportTab) {
-					openReports();
-				} else {
-					chrome.tabs.get(reportTab.id, function callback(tab) {
-						if (chrome.runtime.lastError || tab.url !== REPORT_DASHBOARD_URL) {
-							reportTab = null;
-							openReports();
-						} else {
-							chrome.tabs.reload(reportTab.id);
-							chrome.tabs.update(reportTab.id, { 'active': true }, (tab) => { });
-						}
-					});
-				}
-			} else {
-				console.log("Error interacting with the retest server, response: " + response)
-				alert('Error interacting with the retest server:\n\n' + response
-						+ '\n\nPlease refresh this page and try again. If it still does not work, please contact support: support@retest.de');
-			}
+			handleSuccessfulResponse(response, name, status);
 		} else if (status === 403) {
-			console.log("Server responded with status " + status);
+			console.log(`Server responded with status ${status}`);
 			alert('Something is wrong with your access rights.\nPlease contact support: support@retest.de');
 		} else if (status === 413) {
-			console.log("Server responded with status " + status);
+			console.log(`Server responded with status ${status}`);
 			alert(ERROR_MSG_TOO_LARGE);
 		} else if (status >= 500 && status < 600) {
-			console.log("Server responded with status " + status + ", response: " + response);
+			console.log(`Server responded with status ${status}, response: ${response}`);
 			alert('Error interacting with the retest server. \n\nPlease refresh this page and try again. If it still does not work, please contact support: support@retest.de');
 		} else {
-			console.log("Server responded with status " + status + ", response: " + response);
+			console.log(`Server responded with status ${status}, response: ${response}`);
 			alert('Error interacting with the retest server (status ' + status + '):\n\n' + response
 					+ '\n\nPlease refresh this page and try again. If it still does not work, please contact support: support@retest.de');
 		}
@@ -288,7 +294,7 @@ function addFrameToData(request) {
 	var prefix = getFramePrefixWithUrl(data.allElements, request.url);
 	if (prefix === "") {
 		frameData.push(request);
-		console.log("Found no frame prefix with URL " + request.url + " postponing processing.");
+		console.log(`Found no frame prefix with URL ${request.url} postponing processing.`);
 		return;
 	}
 	var allNewElements = JSON.parse(request.allElements);
@@ -322,7 +328,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 		if (dataUrls.length === dataUrlsLength) {
 			requestData();
 		} else {
-			console.log("Waiting for " + (dataUrlsLength - dataUrls.length) + " more images before continuing.");
+			console.log(`Waiting for ${dataUrlsLength - dataUrls.length} more images before continuing.`);
 		}
 		sendResponse();
 	}
@@ -341,12 +347,12 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 	}
 	if (request.message === 'recheck-web_send_data') {
 		if (sender.frameId === TOPLEVEL_FRAMEID) {
-			console.log("Receiving data from content " + request.url + ".");
+			console.log(`Receiving data from content ${request.url}.`);
 			data = request;
 			data.allElements = JSON.parse(data.allElements);
 			tryToAddAllReceivedFramesToData();
 		} else {
-			console.log("Receiving second data package from another content " + request.url + ".");
+			console.log(`Receiving second data package from another content ${request.url}.`);
 			frameData.push(request);
 			if (data) {
 				tryToAddAllReceivedFramesToData();

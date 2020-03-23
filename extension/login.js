@@ -8,7 +8,7 @@ window.addEventListener("load", function(event) {
 	keycloak.init({
 		onLoad : 'login-required'
 	}).success(function() {
-		console.log("Sending login info.")
+		console.log("Sending login info.");
 		var email = null;
 		if (keycloak.idTokenParsed) {
 			email = keycloak.idTokenParsed.upn;
@@ -20,7 +20,7 @@ window.addEventListener("load", function(event) {
 		});
 		window.close();
 	}).error(function(errorData) {
-		document.getElementById('messages').innerHTML = '<b>Failed to load data. Error: ' + JSON.stringify(errorData) + '</b>';
+		document.getElementById('messages').innerHTML = `<b>Failed to load data. Error: ${JSON.stringify(errorData)}</b>`;
 	});
 });
 
