@@ -47,7 +47,6 @@ function abort(msg) {
 	activeWindowId = null;
 	activeTab = null;
 	activeTabId = null;
-	return;
 }
 
 function requestExistingGoldenMasterNames(token) {
