@@ -134,9 +134,9 @@ function transform(node) {
 
 	// extract *all* HTML element attributes
 	var attrs = node.attributes;
-	for (var i = 0; i < attrs.length; i++) {
-		var attributeName = attrs[i].name;
-		var attributeValue = attrs[i].value;
+	for (let i = 0; i < attrs.length; i++) {
+		const attributeName = attrs[i].name;
+		const attributeValue = attrs[i].value;
         if (attributeValue && attributeValue !== "" && attributeValue !== "null") {
             extractedAttributes[attributeName] = attributeValue;
         }
@@ -152,8 +152,8 @@ function transform(node) {
 	try {
 		parentStyle = window.getComputedStyle(node.parentNode);
 	} catch (err) {}
-	for (var i = 0; i < cssAttributes.length; i++) {
-		var attributeName = cssAttributes[i];
+	for (let i = 0; i < cssAttributes.length; i++) {
+		const attributeName = cssAttributes[i];
 		if (!extractedAttributes[attributeName]) {
 			if (parentStyle[attributeName] !== style[attributeName]) {
 				extractedAttributes[attributeName] = style[attributeName];
