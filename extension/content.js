@@ -29,7 +29,7 @@ if (!alreadyInjected) {
 	}
 	
 	chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-		console.log(`Receiaved ${request.message} in frame with URL ${document.location.href}`);
+		console.log(`Received ${request.message} in frame with URL ${document.location.href}`);
 		if (request.message === 'recheck-web_clicked') {
 			
 		    // Fixes dual-screen position                         Most browsers      Firefox
