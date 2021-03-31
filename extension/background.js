@@ -1,8 +1,8 @@
 // background.js
 
-const MAPPING_SERVICE_URL = 'https://babelfish.prod.cloud.retest.org/api/v1/paths-webdata-mapping';
-const GOLDEN_MASTER_SERVICE_URL = 'https://babelfish.prod.cloud.retest.org/api/v1/existing-golden-masters';
-const REPORT_DASHBOARD_URL = 'https://rehub.retest.de/dashboard';
+const MAPPING_SERVICE_URL = 'https://chrome-extension-backend.dev.cloud.retest.org/api/v1/paths-webdata-mapping';
+const GOLDEN_MASTER_SERVICE_URL = 'https://chrome-extension-backend.dev.cloud.retest.org/api/v1/existing-golden-masters';
+const REPORT_DASHBOARD_URL = 'https://artifact-storage-frontend.dev.cloud.retest.org/dashboard';
 const RESPONSE_GOLDEN_MASTER_CREATED = 'recheck-web-Golden-Master-created';
 const RESPONSE_REPORT_CREATED = 'recheck-web-Report-created';
 

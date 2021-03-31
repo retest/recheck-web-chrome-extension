@@ -1,5 +1,5 @@
 var keycloak = Keycloak({
-	url : 'https://login.retest.de/auth',
+	url : 'https://keycloak.dev.cloud.retest.org/auth',
 	realm : 'customer',
 	clientId : 'rehub'
 });
