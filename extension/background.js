@@ -1,7 +1,7 @@
 // background.js
 
-const MAPPING_SERVICE_URL = 'https://babelfish.prod.cloud.retest.org/api/v1/paths-webdata-mapping';
-const GOLDEN_MASTER_SERVICE_URL = 'https://babelfish.prod.cloud.retest.org/api/v1/existing-golden-masters';
+const MAPPING_SERVICE_URL = 'https://chrome-extension-backend.prod.cloud.retest.org/api/v1/paths-webdata-mapping';
+const GOLDEN_MASTER_SERVICE_URL = 'https://chrome-extension-backend.prod.cloud.retest.org/api/v1/existing-golden-masters';
 const REPORT_DASHBOARD_URL = 'https://rehub.retest.de/dashboard';
 const RESPONSE_GOLDEN_MASTER_CREATED = 'recheck-web-Golden-Master-created';
 const RESPONSE_REPORT_CREATED = 'recheck-web-Report-created';
@@ -140,12 +140,19 @@ function requestGoldenMasterName(data) {
 }
 
 function sendData(name, action) {
-	var xhr = new XMLHttpRequest();
+	// TODO: this needs to be fixed: name and id should be pairs of a map
+	let realName = name.split('[')[0];
+	let id = "";
+	if (action === "compare") {
+		id = name.split('[')[1].replace(']', '');
+	}
+
+	let xhr = new XMLHttpRequest();
 	xhr.open('POST', MAPPING_SERVICE_URL, true);
 	xhr.setRequestHeader('Content-Type', 'application/json');
 	xhr.setRequestHeader('Authorization', 'Bearer ' + token);
 	xhr.onreadystatechange = function() {
-		handleServerResponse(xhr.readyState, xhr.status, xhr.response, name);
+		handleServerResponse(xhr.readyState, xhr.status, xhr.response, realName);
 	};
 	console.log(`Sending data to ${MAPPING_SERVICE_URL}`);
 	chrome.runtime.sendMessage({
@@ -154,7 +161,8 @@ function sendData(name, action) {
 	xhr.send(JSON.stringify({
 		'allElements' : data.allElements,
 		'screenshots' : dataUrls,
-		'name' : sanitize(name),
+		'name' : sanitize(realName),
+		'id' : id,
 		'action' : action,
 		'title' : sanitize(data.title),
 		'url' : data.url,
@@ -343,6 +351,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 		});
 	}
 	if (request.message === 'recheck-web_sendGMName') {
+		// TODO: this needs to be fixed: request.name should be replaced by a map containing id and name of a GM
 		sendData(request.name, request.action);
 	}
 	if (request.message === 'recheck-web_send_data') {
