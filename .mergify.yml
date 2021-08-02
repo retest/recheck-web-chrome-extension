@@ -7,7 +7,6 @@ pull_request_rules:
       - "-draft"
     actions:
       rebase:
-        bot_account: rebazer
 
   - name: "merge non-release PRs with strict rebase"
     conditions:
@@ -20,7 +19,6 @@ pull_request_rules:
         strict: true
         strict_method: rebase
         method: merge
-        bot_account: rebazer
 
   - name: "merge release PRs with strict merge"
     conditions:
@@ -32,7 +30,6 @@ pull_request_rules:
       merge:
         strict: true
         method: merge
-        bot_account: rebazer
 
   - name: "delete PR branches after merge"
     conditions:
